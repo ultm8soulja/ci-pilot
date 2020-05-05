@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "lib": ["es6", "es2015"],
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "strict": true,
+    "noImplicitAny": true,
+    "declaration": true
+  },
+  "lib": ["es2015"],
+  "exclude": ["node_modules", "src/**/*.spec.ts", "**/__mocks__"],
+  "include": ["src"]
+}

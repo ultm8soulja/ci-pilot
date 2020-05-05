@@ -1,0 +1,46 @@
+version: 2.1
+
+executors:
+  circle-ci-node:
+    docker:
+      - image: circleci/node:13
+
+commands:
+  npm_config:
+    steps:
+      - run:
+          name: Setup .npmrc credentials
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+
+jobs:
+  build_test:
+    executor: circle-ci-node
+    steps:
+      - checkout
+      - npm_config
+      - run: yarn
+      - run: yarn build
+      - run: yarn test
+
+  publish:
+    executor: circle-ci-node
+    steps:
+      - checkout
+      - npm_config
+      - run: yarn install --no-lock-file
+      - run: yarn build
+      - run: yarn release
+
+workflows:
+  on_commit:
+    jobs:
+      - build_test:
+          filters:
+            branches:
+              only:
+                - /^feature\/.*/
+                - /^bugfix\/.*/
+      - publish:
+          filters:
+            branches:
+              only: master
