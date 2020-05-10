@@ -85,9 +85,7 @@ export const isFeatureBranch = (branch: string) => {
   const results = FEATURE_BRANCH_REGEX.exec(branch);
 
   if (!results) {
-    const msg = `'${branch}' is not a feature branch`;
-    printErrorText(msg);
-    throw new Error(msg);
+    throw new Error(`'${branch}' is not a feature branch`);
   }
 
   return results[1];
