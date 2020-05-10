@@ -7,6 +7,7 @@ const stages = ['feature', 'alpha'] as const;
 export type Stage = typeof stages[number];
 
 export const publish = async (stage: Stage) => {
+  printInfoText(`> ci-pilot publish [stage]`);
   if (!stage) {
     printErrorText('No stage chosen, exiting ...');
     process.exit(1);
@@ -15,7 +16,7 @@ export const publish = async (stage: Stage) => {
     process.exit(1);
   }
 
-  printInfoText(`Publishing ${stage} ...`);
+  printInfoText(`Publishing stage '${stage}' ...`);
 
   try {
     switch (stage) {
@@ -24,7 +25,7 @@ export const publish = async (stage: Stage) => {
         break;
     }
   } catch (error) {
-    printErrorText(`An error interrupted the operation: ${error.message}`);
+    printErrorText(`${error.message}`);
     printErrorText('Exiting ...');
   }
 };
