@@ -9,6 +9,7 @@ import {
   REPO_ROOT_PATH,
   SEMVER_ALPHA_PRERELEASE_ID_PREFIX,
   SEMVER_FEATURE_PRERELEASE_ID_PREFIX,
+  DEV_MODE,
 } from './config';
 import { defaultBranches } from './helpers';
 
@@ -23,6 +24,7 @@ const out = {
   FEATURE_BRANCH_REGEX,
   SEMVER_FEATURE_PRERELEASE_ID_PREFIX,
   SEMVER_ALPHA_PRERELEASE_ID_PREFIX,
+  DEV_MODE,
 
   ...fileConfig,
 

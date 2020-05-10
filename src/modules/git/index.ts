@@ -16,7 +16,7 @@ export const getMostRecentMatchingTag = async (pattern: string) => {
   const tag = tags.latest;
 
   if (!tag) {
-    printWarning(`No tag matches '${pattern}'`, packageName);
+    printWarning(`No tags match '${pattern}'`, packageName);
     return;
   } else {
     printInfo(`Last tag: ${tag}`, packageName);
@@ -27,6 +27,11 @@ export const getMostRecentMatchingTag = async (pattern: string) => {
 export const fetchMatchingTags = async (pattern: string) => {
   const git = simpleGit();
   const remoteTags = await git.listRemote(['--tags', 'origin', pattern]);
+
+  if (remoteTags.trim() === '') {
+    printInfo(`No matching remote tags found`);
+    return;
+  }
 
   const tags = remoteTags
     .split('\n')
@@ -40,7 +45,8 @@ export const fetchMatchingTags = async (pattern: string) => {
     .filter(tag => tag);
 
   if (!tags) {
-    throw new Error(`No remote tags found matching ${pattern}`);
+    printInfo(`No matching remote tags found`);
+    return;
   }
 
   printInfo(`Matching remote tags =>\n${tags.reduce((p, c) => `${p}\n${c}`)}`);
