@@ -38,6 +38,6 @@ validateAndProcessFileConfig(fileConfig);
 const {
   branchNames: { feature },
 } = fileConfig;
-export const FEATURE_BRANCH_REGEX = new RegExp(`^${feature}\/([A-Z]{2,}-[1-9]{1}[0-9]{0,})`);
+export const FEATURE_BRANCH_REGEX = new RegExp(`^${feature}\/([A-Za-z]{2,}-[1-9]{1}[0-9]{0,})`);
 export const SEMVER_FEATURE_PRERELEASE_ID_PREFIX = `alpha.${feature}.`;
 export const SEMVER_ALPHA_PRERELEASE_ID_PREFIX = 'alpha.';
