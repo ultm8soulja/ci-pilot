@@ -17,7 +17,7 @@
 
 ### Install
 
-NPM
+npm
 ```bash
 npm i --save-dev ci-pilot
 ```
@@ -27,6 +27,14 @@ Yarn
 yarn add -D ci-pilot
 ```
 
+### Usage
+
+#### Features
+
+Publish npm packages on features you're developing by adding the following as a step in your CI pipeline:
+```bash
+$ ci-pilot publish feature
+```
 
 ### Configure
 
