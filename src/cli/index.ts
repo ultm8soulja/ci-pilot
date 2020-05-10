@@ -36,5 +36,9 @@ import { publish, Stage } from './publish';
     case 'publish':
       publish(subcommand as Stage);
       break;
+    default:
+      printErrorText('Unrecognised command, exiting...');
+      process.exit(1);
+      break;
   }
 })();
