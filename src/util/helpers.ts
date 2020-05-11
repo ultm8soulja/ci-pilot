@@ -165,7 +165,8 @@ export const getNextVersionInfo = async (
 };
 
 export const isPackageMutated = async (ancestorRef: string) => {
-  const relativePackagePathFromRepoRoot = PACKAGE_ROOT_PATH.replace(REPO_ROOT_PATH, '');
+  const relativePackagePathFromRepoRoot = PACKAGE_ROOT_PATH.replace(REPO_ROOT_PATH, '').replace(/^(\/)/, '');
+  printInfo(`relativePackagePathFromRepoRoot: ${relativePackagePathFromRepoRoot}`);
   const pattern = new RegExp(relativePackagePathFromRepoRoot);
   const lines = await getDiff(ancestorRef);
 

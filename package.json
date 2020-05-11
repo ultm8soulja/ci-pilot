@@ -35,13 +35,14 @@
     "compile:watch": "yarn compile -- --watch",
     "compile:dry": "yarn compile --noEmit",
     "compile:dry:watch": "yarn compile:dry -- --watch",
-    "build": "yarn clean && yarn compile",
+    "build": "yarn clean && yarn compile && yarn permissions",
     "commit:prep": "yarn clean && yarn build && yarn lint && yarn format && yarn test",
     "format": "prettier --write \"src/**/*.*\" *.config.js",
     "lint": "eslint . --ext .js,.ts,.json",
     "lint:fix": "yarn lint --fix",
     "test": "jest --passWithNoTests",
     "prepublishOnly": "yarn build",
+    "permissions": "shx chmod +x dist/cli/index.js",
     "dev": "ts-node src/cli/index.ts",
     "start": "node ./dist/cli/index.js"
   },
@@ -78,6 +79,7 @@
     "prettier": "^1.19.1",
     "rimraf": "^3.0.2",
     "semantic-release": "^17.0.4",
+    "shx": "^0.3.2",
     "ts-jest": "^25.4.0",
     "ts-node": "^8.10.1",
     "typescript": "^3.7.5"

@@ -21,9 +21,28 @@ export const DEV_MODE = get('DEV_MODE')
 
 /* Constants */
 
-export const PACKAGE_ROOT_PATH = findRoot(__dirname);
-export const REPO_ROOT_PATH = findRoot(__dirname, dir => fs.existsSync(path.resolve(dir, '.git')));
-export const PACKAGE_JSON_PATH = `${PACKAGE_ROOT_PATH}/package.json`;
+const packageJsonFile = 'package.json';
+const ciPilotPackageName = 'ci-pilot';
+const nodeModulesInPathPattern = /\/node_modules/;
+const cwd = process.cwd();
+
+export const PACKAGE_ROOT_PATH = findRoot(cwd, dir => {
+  if (fs.existsSync(`${dir}/${packageJsonFile}`)) {
+    const packageName = JSON.parse(fs.readFileSync(`${dir}/${packageJsonFile}`, { encoding: 'utf-8' })).name;
+    if (packageName === ciPilotPackageName && nodeModulesInPathPattern.test(dir) === false) {
+      // Running within ci-pilot Git repository
+      return true;
+    } else if (packageName !== ciPilotPackageName) {
+      // Running in another with ci-pilot installed as a dependency (within node_modules)
+      return true;
+    }
+  }
+
+  return false;
+});
+
+export const REPO_ROOT_PATH = findRoot(cwd, dir => fs.existsSync(path.resolve(dir, '.git')));
+export const PACKAGE_JSON_PATH = `${PACKAGE_ROOT_PATH}/${packageJsonFile}`;
 export const LERNA_CONFIG_PATH = `${REPO_ROOT_PATH}/lerna.json`;
 export const CI_PILOT_CONFIG_PATH = `${REPO_ROOT_PATH}/ci-pilot.config.json`;
 
