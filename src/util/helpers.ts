@@ -6,7 +6,7 @@ import { ReleaseType } from 'semver';
 
 import config from '../config';
 import { NextVersionInfo } from '../models';
-import { getCurrentBranchName, getDiff, getNextVersion } from '../modules';
+import { getCurrentBranchName, getDiff, getNextVersion, isNpmInstalled, isYarnInstalled } from '../modules';
 
 import { printInfoText, printErrorText, printSuccessText, printWarningText } from './console';
 
@@ -19,6 +19,7 @@ const {
   REPO_ROOT_PATH,
   SEMVER_ALPHA_PRERELEASE_ID_PREFIX,
   SEMVER_FEATURE_PRERELEASE_ID_PREFIX,
+  packageManager,
 } = config;
 
 export const getPackage = () => {
@@ -85,9 +86,7 @@ export const isFeatureBranch = (branch: string) => {
   const results = FEATURE_BRANCH_REGEX.exec(branch);
 
   if (!results) {
-    const msg = `'${branch}' is not a feature branch`;
-    printErrorText(msg);
-    throw new Error(msg);
+    throw new Error(`'${branch}' is not a feature branch`);
   }
 
   return results[1];
@@ -175,4 +174,12 @@ export const isPackageMutated = async (ancestorRef: string) => {
   }
 
   return lines.filter(line => pattern.test(line)).length > 0;
+};
+
+export const isPackageManagerInstalled = () => {
+  if (packageManager === 'npm') {
+    return isNpmInstalled();
+  } else {
+    return isYarnInstalled();
+  }
 };

@@ -14,3 +14,9 @@ export const publish = (distTag = 'latest') => {
 
   checkState(output);
 };
+
+export const isNpmInstalled = () => {
+  const { code } = exec('npm -v', { silent: true });
+
+  return code === 0;
+};

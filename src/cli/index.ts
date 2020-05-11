@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
 import minimist from 'minimist';
-import {} from 'inquirer';
 
 import { startup, printInfoText, printErrorText } from '../util';
 import { isGitRepository, isWorkingDirectoryClean } from '../modules';
+import config from '../config';
 
 import { publish, Stage } from './publish';
+const { DEV_MODE } = config;
 
 (async (): Promise<void> => {
   startup();
@@ -18,7 +19,7 @@ import { publish, Stage } from './publish';
     process.exit(1);
   }
 
-  if (!(await isWorkingDirectoryClean())) {
+  if (!DEV_MODE && !(await isWorkingDirectoryClean())) {
     printErrorText('The Git working directory must be clean');
     process.exit(1);
   }
@@ -35,6 +36,10 @@ import { publish, Stage } from './publish';
   switch (command) {
     case 'publish':
       publish(subcommand as Stage);
+      break;
+    default:
+      printErrorText('Unrecognised command, exiting...');
+      process.exit(1);
       break;
   }
 })();

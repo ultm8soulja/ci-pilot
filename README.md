@@ -1,6 +1,6 @@
 <div align="center">
   <h1>CI Pilot 👨🏿‍✈️</h1>
-  <p>Automate your CI pipeline with ease - you'll find binaries and functions that help you simplify the process</p>
+  <p>Automate your CI pipeline with ease - you'll find binaries and functions that help you simplify the process.</p>
 </div>
 
 <p align="center">
@@ -13,16 +13,29 @@
   </a>
 </p>
 
+## Overview
+
+CI Pilot aims to provide direction and guidance towards setting up the ideal software delivery pipeline as well as fully automating it.
+
+### Production releases
+There are plenty of incredible players on the market that aid in production release management and publishing, and CI Pilot doesn't aim to compete with them, rather to bridge the gap and standardise their use in coordination with your Git methodology (focusing on GitHubFlow and GitFlow).
+
+### Pre-production releases
+Looking at the most well used release management tools (semantic-release, standard-version, etc.), there's a clear lack of in-depth focus on how to go about producing internal packages during the development life-cycle, pre-production. CI Pilot steps in with out of the box support for the following:
+
+1. Feature/Bug-Fix/Hot-Fix branch alpha releases, Git tagging the branch and publishing a package
+1. For GitFlow adopters, Alpha releases, Git tagging the development branch and publishing a package
+
 ## Getting started
 
 ### Install
 
-npm
+npm:
 ```bash
 npm i --save-dev ci-pilot
 ```
 
-Yarn
+Yarn:
 ```bash
 yarn add -D ci-pilot
 ```
@@ -31,25 +44,19 @@ yarn add -D ci-pilot
 
 #### Features
 
-Publish npm packages on features you're developing by adding the following as a step in your CI pipeline:
+Publish packages on features you're developing by adding the following command as a step in your CI pipeline:
 ```bash
-$ ci-pilot publish feature
+ci-pilot publish feature
 ```
 
 ### Configure
 
-- `gitMethodology`: Mandatory, **GitFlow** or **GitHubFlow**
-- `branchNames.base`: Optional, defaults to **master**
-- `branchNames.feature`: Optional, defaults to **feature**
-- `branchNames.hotfix`: Optional, defaults to **hotfix**
-- `branchNames.development`: Optional, defaults to **develop**
-- `branchNames.bugfix`: Optional, defaults to **bugfix**
-- `gitBranchSeparator`: Options: **/** | **-**, defaults to **/**
-- `tagSeparator`: Options: **#** | **£** | **$**, defaults to **#**
+Create a file called `ci-pilot.config.json` in the root of the repository, and populate it with the following:
 
 Default (fully expanded):
 ```json
 {
+  "packageManager": "npm",
   "gitMethodology": "...",
   "branchNames": {
     "base": "master",
@@ -74,3 +81,16 @@ Alternate example:
   "tagSeparator": "$"
 }
 ```
+
+Configuration Options:
+- `packageManager`: Options, **npm** or **yarn**, defaults to **npm**
+- `gitMethodology`: Mandatory, **GitFlow** or **GitHubFlow**
+- `branchNames.base`: Optional, defaults to **master**
+- `branchNames.feature`: Optional, defaults to **feature**
+- `branchNames.hotfix`: Optional, defaults to **hotfix**
+- `branchNames.development`: Optional, defaults to **develop**
+- `branchNames.bugfix`: Optional, defaults to **bugfix**
+- `gitBranchSeparator`: Options: **/** | **-**, defaults to **/**
+- `tagSeparator`: Options: **#** | **£** | **$**, defaults to **#**
+
+_Note: CI Pilot uses your package manager of choice under the hood, npm or yarn. Ensuring that your CI pipeline is configured correctly for npm or yarn remains your responsibility and is out of scope for CI Pilot._ 

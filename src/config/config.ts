@@ -13,9 +13,11 @@ import { validateAndProcessFileConfig } from './helpers';
 
 dotEnvConfig();
 
-export const NPM_CONFIG_REGISTRY = get('NPM_CONFIG_REGISTRY')
-  .default('http://localhost:4873')
-  .asUrlString();
+export const NPM_CONFIG_REGISTRY = get('NPM_CONFIG_REGISTRY').asUrlString();
+
+export const DEV_MODE = get('DEV_MODE')
+  .default('false')
+  .asBoolStrict();
 
 /* Constants */
 
@@ -38,6 +40,6 @@ validateAndProcessFileConfig(fileConfig);
 const {
   branchNames: { feature },
 } = fileConfig;
-export const FEATURE_BRANCH_REGEX = new RegExp(`^${feature}\/([A-Z]{2,}-[1-9]{1}[0-9]{0,})`);
+export const FEATURE_BRANCH_REGEX = new RegExp(`^${feature}\/([A-Za-z]{2,}-[1-9]{1}[0-9]{0,})`);
 export const SEMVER_FEATURE_PRERELEASE_ID_PREFIX = `alpha.${feature}.`;
 export const SEMVER_ALPHA_PRERELEASE_ID_PREFIX = 'alpha.';
