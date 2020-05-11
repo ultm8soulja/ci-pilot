@@ -1,6 +1,13 @@
 import includes from 'lodash/includes';
 
-import { CIPilotFileConfig, BranchNames, tagSeparators, gitBranchSeparators, gitMethodologies } from '../models';
+import {
+  CIPilotFileConfig,
+  BranchNames,
+  tagSeparators,
+  gitBranchSeparators,
+  gitMethodologies,
+  packageManagers,
+} from '../models';
 
 export const defaultBranches: BranchNames = {
   base: 'master',
@@ -33,5 +40,11 @@ export const validateAndProcessFileConfig = (config: CIPilotFileConfig) => {
     config.gitBranchSeparator = '/';
   } else if (!includes(gitBranchSeparators, config.gitBranchSeparator)) {
     throw new Error(`'${config.gitBranchSeparator}' is not an allowed branch separator`);
+  }
+
+  if (!config.packageManager) {
+    config.packageManager = 'npm';
+  } else if (!includes(packageManagers, config.packageManager)) {
+    throw new Error(`'${config.packageManager}' is not an allowed package manager`);
   }
 };

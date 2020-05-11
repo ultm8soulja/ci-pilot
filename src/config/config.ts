@@ -13,9 +13,7 @@ import { validateAndProcessFileConfig } from './helpers';
 
 dotEnvConfig();
 
-export const NPM_CONFIG_REGISTRY = get('NPM_CONFIG_REGISTRY')
-  .default('http://localhost:4873')
-  .asUrlString();
+export const NPM_CONFIG_REGISTRY = get('NPM_CONFIG_REGISTRY').asUrlString();
 
 export const DEV_MODE = get('DEV_MODE')
   .default('false')

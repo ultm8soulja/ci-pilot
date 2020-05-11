@@ -15,11 +15,15 @@ export type BranchSeparator = typeof gitBranchSeparators[number];
 export const tagSeparators = ['#', '£', '$'] as const;
 export type TagSeparator = typeof tagSeparators[number];
 
+export const packageManagers = ['npm'] as const;
+export type PackageManager = typeof packageManagers[number];
+
 export interface CIPilotFileConfig {
   gitMethodology: GitMethodology;
   branchNames: BranchNames;
   gitBranchSeparator: BranchSeparator;
-  tagSeparator?: TagSeparator;
+  tagSeparator: TagSeparator;
+  packageManager: PackageManager;
 }
 
 export interface NextVersionInfo {

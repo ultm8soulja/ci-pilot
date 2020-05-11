@@ -38,6 +38,7 @@ $ ci-pilot publish feature
 
 ### Configure
 
+- `packageManager`: Options, **npm** or **yarn**, defaults to **npm**
 - `gitMethodology`: Mandatory, **GitFlow** or **GitHubFlow**
 - `branchNames.base`: Optional, defaults to **master**
 - `branchNames.feature`: Optional, defaults to **feature**
@@ -50,6 +51,7 @@ $ ci-pilot publish feature
 Default (fully expanded):
 ```json
 {
+  "packageManager": "npm",
   "gitMethodology": "...",
   "branchNames": {
     "base": "master",
