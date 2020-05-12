@@ -6,6 +6,7 @@ import { config as dotEnvConfig } from 'dotenv';
 import findRoot from 'find-root';
 
 import { CIPilotFileConfig } from '../models';
+import { printErrorText } from '../util/console';
 
 import { validateAndProcessFileConfig } from './helpers';
 
@@ -23,6 +24,7 @@ export const DEV_MODE = get('DEV_MODE')
 
 const packageJsonFile = 'package.json';
 const ciPilotPackageName = 'ci-pilot';
+const ciPilotConfigFile = 'ci-pilot.config.json';
 const nodeModulesInPathPattern = /\/node_modules/;
 const cwd = process.cwd();
 
@@ -44,13 +46,19 @@ export const PACKAGE_ROOT_PATH = findRoot(cwd, dir => {
 export const REPO_ROOT_PATH = findRoot(cwd, dir => fs.existsSync(path.resolve(dir, '.git')));
 export const PACKAGE_JSON_PATH = `${PACKAGE_ROOT_PATH}/${packageJsonFile}`;
 export const LERNA_CONFIG_PATH = `${REPO_ROOT_PATH}/lerna.json`;
-export const CI_PILOT_CONFIG_PATH = `${REPO_ROOT_PATH}/ci-pilot.config.json`;
+export const CI_PILOT_CONFIG_PATH = `${REPO_ROOT_PATH}/${ciPilotConfigFile}`;
 
 /* File */
 
 // TODO: Support other config file formats other than JSON
-// TODO: Validate config using JSON Schema
-export const fileConfig: CIPilotFileConfig = JSON.parse(fs.readFileSync(CI_PILOT_CONFIG_PATH, { encoding: 'utf-8' }));
+let rawFileConfig: string;
+try {
+  rawFileConfig = fs.readFileSync(CI_PILOT_CONFIG_PATH, { encoding: 'utf-8' });
+} catch (error) {
+  printErrorText(`You need to create a ${ciPilotConfigFile} in the root of your repository.`);
+  process.exit(1);
+}
+export const fileConfig: CIPilotFileConfig = JSON.parse(rawFileConfig);
 
 validateAndProcessFileConfig(fileConfig);
 

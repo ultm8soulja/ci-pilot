@@ -3,8 +3,10 @@ import clear from 'clear';
 import chalk from 'chalk';
 import { textSync } from 'figlet';
 
-export const startup = (): void => {
-  clear();
+export const startup = (clearConsole = false): void => {
+  if (clearConsole) {
+    clear();
+  }
 
   console.log(chalk.green(textSync('CI Pilot', { horizontalLayout: 'full' })));
 };
