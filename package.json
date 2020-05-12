@@ -44,7 +44,8 @@
     "prepublishOnly": "yarn build",
     "permissions": "shx chmod +x dist/cli/index.js",
     "dev": "ts-node src/cli/index.ts",
-    "start": "node ./dist/cli/index.js"
+    "start": "node ./dist/cli/index.js",
+    "release": "semantic-release"
   },
   "devDependencies": {
     "@commitlint/cli": ">=7.6.0",
