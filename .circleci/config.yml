@@ -6,18 +6,33 @@ executors:
       - image: circleci/node:13
 
 commands:
+  checkout_master:
+    steps:
+      - run:
+          name: Fetch the master branch
+          command: git fetch origin master:master -f
   npm_config:
     steps:
       - run:
           name: Setup .npmrc credentials
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+  github_config:
+    steps:
+      - run:
+          name: Setup GitHub
+          command: |
+            git config --global user.email $GITHUB_EMAIL
+            git config --global user.name $GITHUB_USER
+            git remote set-url origin https://${GITHUB_TOKEN}@github.com/ultm8soulja/ci-pilot.git
 
 jobs:
   build_test:
     executor: circle-ci-node
     steps:
       - checkout
+      - checkout_master
       - npm_config
+      - github_config
       - run: yarn
       - run: yarn build
       - run: yarn test
@@ -27,6 +42,7 @@ jobs:
     steps:
       - checkout
       - npm_config
+      - github_config
       - run: yarn install --no-lock-file
       - run: yarn build
       - run: yarn release
