@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/ultm8soulja/ci-pilot/compare/v1.1.0...v1.1.1) (2020-05-12)
+
+
+### Bug Fixes
+
+* Improve error handling ([9d13d01](https://github.com/ultm8soulja/ci-pilot/commit/9d13d01836d4f8e8c92e0a5730dcfcf95d5936ae))
+
 # [1.1.0](https://github.com/ultm8soulja/ci-pilot/compare/v1.0.0...v1.1.0) (2020-05-11)
 
 
