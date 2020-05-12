@@ -23,7 +23,7 @@ commands:
           command: |
             git config --global user.email $GITHUB_EMAIL
             git config --global user.name $GITHUB_USER
-            git remote set-url origin https://${GH_TOKEN}@github.com/ultm8soulja/ci-pilot.git
+            git remote set-url origin https://${GITHUB_TOKEN}@github.com/ultm8soulja/ci-pilot.git
 
 jobs:
   build_test:
