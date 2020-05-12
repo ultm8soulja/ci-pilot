@@ -11,6 +11,10 @@
   <a href="https://github.com/semantic-release/semantic-release#-semantic-release">
     <img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg" style="max-width:100%;">
   </a>
+  
+  <a href="https://circleci.com/gh/ultm8soulja/ci-pilot">
+    <img src="https://circleci.com/gh/ultm8soulja/ci-pilot.svg?style=svg&circle-token=f8aa6102f5e3d526e5f2d0ae15b2a8cf7afc3e53" style="max-width:100%;">
+  </a>
 </p>
 
 ## Overview
