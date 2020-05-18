@@ -9,8 +9,10 @@ export const bumpVersion = (version: string, gitTagVersion = true) => {
   checkState(output);
 };
 
-export const publish = (distTag = 'latest') => {
-  const output = exec(`npm publish --tag ${distTag} --registry ${config.NPM_CONFIG_REGISTRY}`, { silent: true });
+export const publish = (packagePath: string, distTag = 'latest') => {
+  const output = exec(`npm publish ${packagePath} --tag ${distTag} --registry ${config.NPM_CONFIG_REGISTRY}`, {
+    silent: true,
+  });
 
   checkState(output);
 };

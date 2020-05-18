@@ -44,14 +44,27 @@ Yarn:
 yarn add -D ci-pilot
 ```
 
-### Usage
+## Usage
 
-#### Features
+We have different recommendations on how to use CI Pilot based on the progress of the code change through your software release pipeline - see details below.
+
+### Developing features
+
+#### Publish your package
 
 Publish packages on features you're developing by adding the following command as a step in your CI pipeline:
 ```bash
 ci-pilot publish feature
 ```
+
+Note: We don't recommend committing feature branch versions bumps to Git, as the pre-release alpha versions would eventually be merged into base or development branches which is wrong. Instead we believe that Git tags are sufficient to mark the origin of built packages that are uploaded to your package registries.
+
+Our strategy:
+1. Version the package(s) in the repository locally
+1. Publish the packages (containing the `package.json` file for built assets contain the alpha feature version)
+1. Wipe away the version changes in the Git working tree
+
+If you're working in a mono-repo then the above command will detect that and by default publish all workspace packages. If you wish to only publish only one of the packages in the mono-repo then you should include the `--package-only` flag otherwise the command will fail, as it's not our recommendation.
 
 ### Configure
 

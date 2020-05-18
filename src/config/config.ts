@@ -22,15 +22,15 @@ export const DEV_MODE = get('DEV_MODE')
 
 /* Constants */
 
-const packageJsonFile = 'package.json';
+export const PACKAGE_JSON_FILE = 'package.json';
 const ciPilotPackageName = 'ci-pilot';
 const ciPilotConfigFile = 'ci-pilot.config.json';
 const nodeModulesInPathPattern = /\/node_modules/;
-const cwd = process.cwd();
+export const CWD = process.cwd();
 
-export const PACKAGE_ROOT_PATH = findRoot(cwd, dir => {
-  if (fs.existsSync(`${dir}/${packageJsonFile}`)) {
-    const packageName = JSON.parse(fs.readFileSync(`${dir}/${packageJsonFile}`, { encoding: 'utf-8' })).name;
+export const PACKAGE_ROOT_PATH = findRoot(CWD, dir => {
+  if (fs.existsSync(`${dir}/${PACKAGE_JSON_FILE}`)) {
+    const packageName = JSON.parse(fs.readFileSync(`${dir}/${PACKAGE_JSON_FILE}`, { encoding: 'utf-8' })).name;
     if (packageName === ciPilotPackageName && nodeModulesInPathPattern.test(dir) === false) {
       // Running within ci-pilot Git repository
       return true;
@@ -43,17 +43,18 @@ export const PACKAGE_ROOT_PATH = findRoot(cwd, dir => {
   return false;
 });
 
-export const REPO_ROOT_PATH = findRoot(cwd, dir => fs.existsSync(path.resolve(dir, '.git')));
-export const PACKAGE_JSON_PATH = `${PACKAGE_ROOT_PATH}/${packageJsonFile}`;
-export const LERNA_CONFIG_PATH = `${REPO_ROOT_PATH}/lerna.json`;
-export const CI_PILOT_CONFIG_PATH = `${REPO_ROOT_PATH}/${ciPilotConfigFile}`;
+export const REPO_ROOT_PATH = findRoot(CWD, dir => fs.existsSync(path.resolve(dir, '.git')));
+export const ROOT_PACKAGE_JSON_FILE_PATH = `${REPO_ROOT_PATH}/${PACKAGE_JSON_FILE}`;
+export const PACKAGE_JSON_FILE_PATH = `${PACKAGE_ROOT_PATH}/${PACKAGE_JSON_FILE}`;
+export const LERNA_CONFIG_FILE_PATH = `${REPO_ROOT_PATH}/lerna.json`;
+export const CI_PILOT_CONFIG_FILE_PATH = `${REPO_ROOT_PATH}/${ciPilotConfigFile}`;
 
 /* File */
 
 // TODO: Support other config file formats other than JSON
 let rawFileConfig: string;
 try {
-  rawFileConfig = fs.readFileSync(CI_PILOT_CONFIG_PATH, { encoding: 'utf-8' });
+  rawFileConfig = fs.readFileSync(CI_PILOT_CONFIG_FILE_PATH, { encoding: 'utf-8' });
 } catch (error) {
   printErrorText(`You need to create a ${ciPilotConfigFile} in the root of your repository.`);
   process.exit(1);
