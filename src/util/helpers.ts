@@ -34,7 +34,6 @@ const {
   LERNA_CONFIG_FILE_PATH,
   PACKAGE_ROOT_PATH,
   REPO_ROOT_PATH,
-  ROOT_PACKAGE_JSON_FILE_PATH,
   SEMVER_ALPHA_PRERELEASE_ID_PREFIX,
   SEMVER_FEATURE_PRERELEASE_ID_PREFIX,
   PACKAGE_JSON_FILE,
@@ -71,20 +70,20 @@ export const getPackageVersion = (packagePath: string) => {
   return version;
 };
 
-export const printInfo = (message: string, packageName: string) => {
-  printInfoText(`(${packageName}): ${message}`);
+export const printInfo = (message: string, packageName: string, lineBreak = true) => {
+  printInfoText(`(${packageName}): ${message}`, lineBreak);
 };
 
-export const printWarning = (message: string, packageName: string) => {
-  printWarningText(`(${packageName}): ${message}`);
+export const printWarning = (message: string, packageName: string, lineBreak = true) => {
+  printWarningText(`(${packageName}): ${message}`, lineBreak);
 };
 
-export const printError = (message: string, packageName: string) => {
-  printErrorText(`(${packageName}): ${message}`);
+export const printError = (message: string, packageName: string, lineBreak = true) => {
+  printErrorText(`(${packageName}): ${message}`, lineBreak);
 };
 
-export const printSuccess = (message: string, packageName: string) => {
-  printSuccessText(`(${packageName}): ${message}`);
+export const printSuccess = (message: string, packageName: string, lineBreak = true) => {
+  printSuccessText(`(${packageName}): ${message}`, lineBreak);
 };
 
 export const checkState = ({ code, stderr }: ShellString) => {
@@ -368,7 +367,7 @@ export const prepareNextFeatureVersion = async (packagePath: string) => {
 };
 
 export const getMonorepoPackages = async () => {
-  const yarnWorkspaces = getYarnWorkspaces(ROOT_PACKAGE_JSON_FILE_PATH);
+  const yarnWorkspaces = getYarnWorkspaces(REPO_ROOT_PATH);
   const workspaces: string[] = [];
 
   if (yarnWorkspaces) {

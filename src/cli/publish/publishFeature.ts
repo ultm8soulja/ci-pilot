@@ -20,26 +20,27 @@ const publishAPackage = async (packagePath: string) => {
   const info = await prepareNextFeatureVersion(packagePath);
 
   if (!info) {
-    process.exit(0);
+    return;
   }
 
   const { version, tag } = info;
 
   await finaliseVersionAndPublish(packagePath, info, false);
 
-  printSuccess(`Feature branch ${branchName} successfully publish`, packageName);
-  printSuccess(`Version: ${version}`, packageName);
-  printSuccess(`Tag: ${tag}`, packageName);
+  printSuccess(`Feature branch ${branchName} successfully publish`, packageName, false);
+  printSuccess(`Version: ${version}`, packageName, false);
+  printSuccess(`Tag: ${tag}`, packageName, false);
 };
 
 export const publishFeature = async () => {
   const isMonorepo = isPackageAMonorepo();
 
   if (isMonorepo) {
+    printInfoText(`This is a mono-repo - all workspace packages will be published`);
     const packages = await getMonorepoPackages();
 
     for (const aPackage of packages) {
-      publishAPackage(aPackage.absolutePath);
+      await publishAPackage(aPackage.packagePath);
     }
   } else {
     await publishAPackage(PACKAGE_ROOT_PATH);

@@ -6,7 +6,7 @@ import { config as dotEnvConfig } from 'dotenv';
 import findRoot from 'find-root';
 
 import { CIPilotFileConfig } from '../models';
-import { printErrorText } from '../util/console';
+import { printErrorText, printInfoText } from '../util/console';
 
 import { validateAndProcessFileConfig, defaultBranches } from './helpers';
 
@@ -99,3 +99,7 @@ const out = {
 };
 
 export default out;
+
+if (DEV_MODE) {
+  printInfoText(JSON.stringify(out, undefined, 2));
+}
