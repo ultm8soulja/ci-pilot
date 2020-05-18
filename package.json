@@ -41,7 +41,6 @@
     "lint": "eslint . --ext .js,.ts,.json",
     "lint:fix": "yarn lint --fix",
     "test": "jest --passWithNoTests",
-    "prepublishOnly": "yarn build",
     "permissions": "shx chmod +x dist/cli/index.js",
     "dev": "ts-node src/cli/index.ts",
     "start": "node ./dist/cli/index.js",

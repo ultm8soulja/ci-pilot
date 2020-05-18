@@ -271,7 +271,7 @@ export const gitVersionAndTag = async (packagePath: string, { version, tag }: Ne
   printInfo(`Finalising version, bumping to ${version} (tag: ${tag})`, packageName);
 
   printInfo('Set the version for the package, and tag HEAD with the same version', packageName);
-  bumpVersion(version, false);
+  bumpVersion(packagePath, version, false);
 
   if (commitToGit) {
     // TODO: Add commit function to git module
