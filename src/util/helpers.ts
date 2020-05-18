@@ -38,6 +38,7 @@ const {
   SEMVER_ALPHA_PRERELEASE_ID_PREFIX,
   SEMVER_FEATURE_PRERELEASE_ID_PREFIX,
   PACKAGE_JSON_FILE,
+  DRY_RUN,
   packageManager,
   gitMethodology,
   branchNames: { base, development },
@@ -307,6 +308,11 @@ export const finaliseVersionAndPublish = async (
   versionInfo: NextVersionInfo,
   commitToGit = false
 ) => {
+  if (DRY_RUN) {
+    printWarningText('Dry run mode so skipping git version and tag');
+    return;
+  }
+
   await gitVersionAndTag(packagePath, versionInfo, commitToGit);
   await pushToOrigin(versionInfo.tag);
   await publishPackage(packagePath, versionInfo.tag);
