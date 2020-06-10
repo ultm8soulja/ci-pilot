@@ -4,13 +4,13 @@ import { readFileSync } from 'fs';
 // @ts-ignore
 import github from 'gh-got';
 
-import { getCurrentBranchName, getRepositoryName } from '../modules/git';
-import { GH_TOKEN, RELEASE_REQUEST_PATH } from '../config/config';
-import { printInfoText, printErrorText, printSuccessText, printError } from '../util';
+import { getCurrentBranchName, getRepositoryName } from '../git';
+import config, { GH_TOKEN } from '../../config';
+import { printInfoText, printErrorText, printSuccessText, printError } from '../../util';
 
 const parseReleaseRequest = async () => {
   try {
-    const file = readFileSync(RELEASE_REQUEST_PATH, { encoding: 'utf-8' });
+    const file = readFileSync(config.RELEASE_REQUEST_PATH, { encoding: 'utf-8' });
     return file;
   } catch (err) {
     printErrorText('either there is no RELEASE_REQUEST.md file present or it is invalid');
@@ -18,11 +18,9 @@ const parseReleaseRequest = async () => {
   }
 };
 
-export const createPullRequest = async () => {
+export const createPullRequest = async (rcBranch: string, newVersion: string) => {
   const currentBranch = await getCurrentBranchName();
   const remote = await getRepositoryName();
-  const newVersion = '2.0.0'; // to be updated
-  const baseBranch = 'master'; // to be updated
 
   printInfoText(`attempting to open release request in ${remote}`);
 
@@ -34,7 +32,7 @@ export const createPullRequest = async () => {
       body: {
         title: `chore(release): v${newVersion}`,
         head: currentBranch,
-        base: baseBranch,
+        base: rcBranch,
         body: `${body} \n\n\n*created by ci-pilot*`,
       },
     });
@@ -46,7 +44,7 @@ export const createPullRequest = async () => {
     if (prettyError) {
       printErrorText(prettyError.message);
     } else {
-      printError(err);
+      printErrorText(err);
     }
 
     return;
