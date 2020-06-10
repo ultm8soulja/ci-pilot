@@ -24,6 +24,10 @@ const DEV_MODE = get('DEV_MODE')
   .default('false')
   .asBoolStrict();
 
+export const GH_TOKEN = get('GH_TOKEN')
+  .required()
+  .asString();
+
 /* Constants */
 
 const PACKAGE_JSON_FILE = 'package.json';
@@ -52,6 +56,7 @@ const ROOT_PACKAGE_JSON_FILE_PATH = `${REPO_ROOT_PATH}/${PACKAGE_JSON_FILE}`;
 const PACKAGE_JSON_FILE_PATH = `${PACKAGE_ROOT_PATH}/${PACKAGE_JSON_FILE}`;
 const LERNA_CONFIG_FILE_PATH = `${REPO_ROOT_PATH}/lerna.json`;
 const CI_PILOT_CONFIG_FILE_PATH = `${REPO_ROOT_PATH}/${ciPilotConfigFile}`;
+const RELEASE_REQUEST_PATH = `${REPO_ROOT_PATH}/.github/RELEASE_REQUEST.md`;
 
 /* File */
 
@@ -92,6 +97,7 @@ const out = {
   DRY_RUN,
   PACKAGE_JSON_FILE,
   CWD,
+  RELEASE_REQUEST_PATH,
 
   ...fileConfig,
 

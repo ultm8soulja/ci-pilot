@@ -92,6 +92,7 @@
     "env-var": "^6.1.1",
     "figlet": "^1.2.4",
     "find-root": "^1.1.0",
+    "gh-got": "^9.0.0",
     "inquirer": "^7.1.0",
     "lodash": "^4.17.15",
     "minimist": "^1.2.5",
