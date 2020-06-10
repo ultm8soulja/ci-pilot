@@ -44,7 +44,12 @@ Yarn:
 yarn add -D ci-pilot
 ```
 
-## Usage
+## Commands
+
+1. `ci-pilot publish feature`
+1. `ci-pilot release init`
+
+## Ethos
 
 We have different recommendations on how to use CI Pilot based on the progress of the code change through your software release pipeline - see details below.
 
@@ -66,7 +71,7 @@ Our strategy:
 
 If you're working in a mono-repo then the above command will detect that and by default publish all workspace packages. If you wish to only publish only one of the packages in the mono-repo then you should include the `--package-only` flag otherwise the command will fail, as it's not our recommendation.
 
-### Configure
+## Configure
 
 Create a file called `ci-pilot.config.json` in the root of the repository, and populate it with the following:
 

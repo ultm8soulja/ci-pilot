@@ -6,7 +6,6 @@ import {
   finaliseVersionAndPublish,
   isMonorepo,
   getMonorepoPackages,
-  buildPackageDependencyGraph,
 } from '../../util';
 import { getCurrentBranchName } from '../../modules';
 import config from '../../config';

@@ -2,11 +2,11 @@ import {
   getPackageName,
   isMonorepo,
   printInfoText,
-  buildPackageDependencyGraph,
+  // buildPackageDependencyGraph,
   prepareNextFeatureVersion,
   finaliseVersion,
   printSuccess,
-  getMonorepoPackages,
+  // getMonorepoPackages,
 } from '../../util';
 import { getCurrentBranchName } from '../../modules';
 import config from '../../config';
@@ -17,9 +17,8 @@ export const versionFeature = async () => {
   const branchName = await getCurrentBranchName();
 
   if (isMonorepo()) {
-    const packages = await getMonorepoPackages();
-
-    const graph = buildPackageDependencyGraph(packages);
+    // const packages = await getMonorepoPackages();
+    // const graph = buildPackageDependencyGraph(packages);
     // printSuccessText(JSON.stringify(graph.overallOrder()));
     // printSuccessText(JSON.stringify(graph.dependenciesOf('@fairfx/equals-server')));
   } else {
