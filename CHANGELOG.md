@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/ultm8soulja/ci-pilot/compare/v1.2.0...v1.3.0) (2020-06-10)
+
+
+### Features
+
+* Introduce Release CLI ([#4](https://github.com/ultm8soulja/ci-pilot/issues/4)) ([fad1997](https://github.com/ultm8soulja/ci-pilot/commit/fad1997426653961a483aa4d0d2ac400f15bbefa))
+
 # [1.2.0](https://github.com/ultm8soulja/ci-pilot/compare/v1.1.1...v1.2.0) (2020-06-10)
 
 
