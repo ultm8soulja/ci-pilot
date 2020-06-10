@@ -4,11 +4,13 @@ import { printInfoText, printErrorText, startup } from '../../util';
 import { isGitRepository, isWorkingDirectoryClean } from '../../modules';
 import config from '../../config';
 
+import { stageReleaseCandidateHead } from './stageRelease';
+
 import { initRelease } from '.';
 
 const { DEV_MODE } = config;
 
-const steps = ['init'] as const;
+const steps = ['init', 'stage'] as const;
 export type Step = typeof steps[number];
 
 export const release = async (step: Step) => {
@@ -39,6 +41,9 @@ export const release = async (step: Step) => {
     switch (step) {
       case 'init':
         await initRelease();
+        break;
+      case 'stage':
+        await stageReleaseCandidateHead();
         break;
     }
   } catch (error) {
