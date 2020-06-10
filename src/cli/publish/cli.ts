@@ -8,7 +8,7 @@ import { publishFeature } from './';
 
 const { packageManager, DEV_MODE, CWD, REPO_ROOT_PATH } = config;
 
-const stages = ['feature', 'alpha'] as const;
+const stages = ['feature' /* , 'alpha' */] as const;
 export type Stage = typeof stages[number];
 
 export const publish = async (stage: Stage) => {

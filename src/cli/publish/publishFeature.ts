@@ -4,43 +4,77 @@ import {
   printInfoText,
   prepareNextFeatureVersion,
   finaliseVersionAndPublish,
-  isMonorepo as isPackageAMonorepo,
+  isMonorepo,
   getMonorepoPackages,
+  buildPackageDependencyGraph,
 } from '../../util';
 import { getCurrentBranchName } from '../../modules';
 import config from '../../config';
+import { NextVersionInfo, PackageJson } from '../../models';
 
 const { PACKAGE_ROOT_PATH } = config;
 
-const publishAPackage = async (packagePath: string) => {
+const publishMonorepoStepOne = async (packagePath: string) => {
+  const packageName = getPackageName(packagePath);
+  printInfoText(`Package name is '${packageName}'`);
+  return await prepareNextFeatureVersion(packagePath);
+};
+
+const publishMonorepoStepTwo = async (packagePath: string, versionInfo: NextVersionInfo) => {
   const packageName = getPackageName(packagePath);
   const branchName = await getCurrentBranchName();
-  printInfoText(`Package name is '${packageName}'`);
 
-  const info = await prepareNextFeatureVersion(packagePath);
+  const { version, tag } = versionInfo;
 
-  if (!info) {
-    return;
+  const done = await finaliseVersionAndPublish(packagePath, versionInfo, false);
+
+  if (done) {
+    printSuccess(`Feature branch ${branchName} successfully publish`, packageName, false);
+    printSuccess(`Version: ${version}`, packageName, false);
+    printSuccess(`Tag: ${tag}`, packageName, false);
   }
+};
 
-  const { version, tag } = info;
+const publishAPackage = async (packagePath: string) => {
+  const info = await publishMonorepoStepOne(packagePath);
 
-  await finaliseVersionAndPublish(packagePath, info, false);
-
-  printSuccess(`Feature branch ${branchName} successfully publish`, packageName, false);
-  printSuccess(`Version: ${version}`, packageName, false);
-  printSuccess(`Tag: ${tag}`, packageName, false);
+  if (info) {
+    await publishMonorepoStepTwo(packagePath, info);
+  }
 };
 
 export const publishFeature = async () => {
-  const isMonorepo = isPackageAMonorepo();
-
-  if (isMonorepo) {
+  if (isMonorepo()) {
     printInfoText(`This is a mono-repo - all workspace packages will be published`);
     const packages = await getMonorepoPackages();
+    const packagesInfo = new Map<string, NextVersionInfo>();
+
+    const changedPackages: PackageJson[] = [];
 
     for (const aPackage of packages) {
-      await publishAPackage(aPackage.packagePath);
+      const stepOneOutcome = await publishMonorepoStepOne(aPackage.packagePath);
+      if (stepOneOutcome) {
+        changedPackages.push(aPackage);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        packagesInfo.set(aPackage.name!, stepOneOutcome);
+      }
+    }
+
+    /**
+     * For changes packages:
+     * 1. Get inter-dependency order for all mono-repo packages
+     * 2. Identify
+     */
+
+    // const graph = buildPackageDependencyGraph(packages);
+
+    for (const aPackage of changedPackages) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const info = packagesInfo.get(aPackage.name!);
+
+      if (info) {
+        await publishMonorepoStepTwo(aPackage.packagePath, info);
+      }
     }
   } else {
     await publishAPackage(PACKAGE_ROOT_PATH);

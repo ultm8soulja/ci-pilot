@@ -218,9 +218,16 @@ export const getMonorepoWorkspacePackages = (workspacePath: string) => {
     .map(dir => {
       try {
         const packagePath = `${workspacePath}/${dir}`;
+        const content = getPackage(packagePath);
+
+        if (content.private) {
+          printWarningText(`${content.name} is marked as private - excluding...`);
+          return;
+        }
+
         const myPackage: PackageJson = {
           packagePath,
-          ...getPackage(packagePath),
+          ...content,
         };
         return myPackage;
       } catch (error) {
@@ -309,13 +316,15 @@ export const finaliseVersionAndPublish = async (
 ) => {
   if (DRY_RUN) {
     printWarningText('Dry run mode so skipping git version and tag');
-    return;
+    return false;
   }
 
   await gitVersionAndTag(packagePath, versionInfo, commitToGit);
   await pushToOrigin(versionInfo.tag);
   await publishPackage(packagePath, versionInfo.tag);
   await gitCleanWorkingDirectory();
+
+  return true;
 };
 
 export const prepareNextFeatureVersion = async (packagePath: string) => {
@@ -357,7 +366,7 @@ export const prepareNextFeatureVersion = async (packagePath: string) => {
   }
 
   if (!(await isPackageMutated(packagePath, ancestor))) {
-    printWarning('No changes in the package, exiting...', packageName);
+    printWarning('No changes in the package', packageName);
     return;
   }
 
