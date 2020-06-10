@@ -7,6 +7,7 @@ import { printErrorText } from '../util';
 import { publish, Stage as PublishStage } from './publish';
 import { helper, Helper } from './helper';
 // import { version, Stage as VersionStage } from './version';
+import { release, Step as ReleaseStep } from './release';
 
 (async (): Promise<void> => {
   const {
@@ -28,6 +29,9 @@ import { helper, Helper } from './helper';
     // case 'version':
     //   version(subcommand as VersionStage);
     //   break;
+    case 'release':
+      release(subcommand as ReleaseStep);
+      break;
     default:
       printErrorText('Unrecognised command, exiting...');
       process.exit(1);

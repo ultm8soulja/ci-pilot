@@ -55,6 +55,18 @@ export const fetchMatchingTags = async (pattern: string) => {
   await git.fetch('origin', undefined, refSpecs);
 };
 
+export const checkoutBranch = async (branch: string) => {
+  const git = simpleGit();
+  await git.checkout(branch);
+};
+
+export const createBranch = async (branch: string) => {
+  const git = simpleGit();
+  await git.checkoutLocalBranch(branch);
+
+  printInfoText(`Git branch created => ${branch}`);
+};
+
 export const createTag = async (tag: string) => {
   const git = simpleGit();
   const { name } = await git.addTag(tag);
