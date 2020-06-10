@@ -11,10 +11,14 @@ export const startup = (clearConsole = false): void => {
   console.log(chalk.green(textSync('CI Pilot', { horizontalLayout: 'full' })));
 };
 
-export const printInfoText = (text: string): void => console.log(chalk.gray(text) + '\n');
+export const printInfoText = (text: string, lineBreak = true): void =>
+  console.log(chalk.gray(text) + (lineBreak ? '\n' : ''));
 
-export const printWarningText = (text: string): void => console.log(chalk.yellow(text) + '\n');
+export const printWarningText = (text: string, lineBreak = true): void =>
+  console.log(chalk.yellow(text) + (lineBreak ? '\n' : ''));
 
-export const printErrorText = (text: string): void => console.log(chalk.red(text) + '\n');
+export const printErrorText = (text: string, lineBreak = true): void =>
+  console.log(chalk.red(text) + (lineBreak ? '\n' : ''));
 
-export const printSuccessText = (text: string): void => console.log(chalk.green(text) + '\n');
+export const printSuccessText = (text: string, lineBreak = true): void =>
+  console.log(chalk.green(text) + (lineBreak ? '\n' : ''));

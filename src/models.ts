@@ -1,3 +1,5 @@
+import { JSONSchemaForNPMPackageJsonFiles } from '@schemastore/package';
+
 export interface BranchNames {
   base: string;
   feature: string;
@@ -31,3 +33,7 @@ export interface NextVersionInfo {
   tag: string;
   lastTag?: string;
 }
+
+export type PackageJson = JSONSchemaForNPMPackageJsonFiles & {
+  packagePath: string;
+};

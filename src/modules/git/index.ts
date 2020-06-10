@@ -1,7 +1,7 @@
 import simpleGit from 'simple-git/promise';
 import { exec } from 'shelljs';
 
-import { printInfo, printWarning, getPackageName, printError } from '../../util/helpers';
+import { printInfoText, printWarningText, printErrorText } from '../../util';
 
 export const getCurrentBranchName = async () => {
   const git = simpleGit();
@@ -11,15 +11,14 @@ export const getCurrentBranchName = async () => {
 
 export const getMostRecentMatchingTag = async (pattern: string) => {
   const git = simpleGit();
-  const packageName = getPackageName();
   const tags = await git.tags([pattern, { '--sort': '-v:refname' }]);
   const tag = tags.latest;
 
   if (!tag) {
-    printWarning(`No tags match '${pattern}'`, packageName);
+    printWarningText(`No tags match '${pattern}'`);
     return;
   } else {
-    printInfo(`Last tag: ${tag}`, packageName);
+    printInfoText(`Last tag: ${tag}`);
     return tag;
   }
 };
@@ -29,7 +28,7 @@ export const fetchMatchingTags = async (pattern: string) => {
   const remoteTags = await git.listRemote(['--tags', 'origin', pattern]);
 
   if (remoteTags.trim() === '') {
-    printInfo(`No matching remote tags found`);
+    printInfoText(`No matching remote tags found`);
     return;
   }
 
@@ -45,11 +44,11 @@ export const fetchMatchingTags = async (pattern: string) => {
     .filter(tag => tag);
 
   if (!tags) {
-    printInfo(`No matching remote tags found`);
+    printInfoText(`No matching remote tags found`);
     return;
   }
 
-  printInfo(`Matching remote tags =>\n${tags.reduce((p, c) => `${p}\n${c}`)}`);
+  printInfoText(`Matching remote tags =>\n${tags.reduce((p, c) => `${p}\n${c}`)}`);
 
   const refSpecs = tags.map(tag => `${tag}:${tag}`);
 
@@ -60,7 +59,7 @@ export const createTag = async (tag: string) => {
   const git = simpleGit();
   const { name } = await git.addTag(tag);
 
-  printInfo(`Git tag created => ${name}`);
+  printInfoText(`Git tag created => ${name}`);
 
   return name;
 };
@@ -91,7 +90,7 @@ export const getRefHash = async (ref: string): Promise<string> => {
   const {
     latest: { hash },
   } = await git.log([ref, '-1', '--pretty=%H']);
-  printInfo(`Hash: '${hash}'`);
+  printInfoText(`Hash: '${hash}'`);
   return hash;
 };
 
@@ -103,7 +102,7 @@ export const isAncestor = (commitOne: string, commitTwo: string) => {
   } else if (code === 1) {
     return false;
   } else {
-    printError(stderr);
+    printErrorText(stderr);
 
     let msg;
     if (new RegExp(commitOne).test(stderr)) {
@@ -131,6 +130,6 @@ export const getDiff = async (refOne: string, refTwo = 'HEAD') => {
     return;
   }
 
-  printInfo(`Changes => \n${diff}`);
+  printInfoText(`Changes => \n${diff}`);
   return diff.split('\n');
 };

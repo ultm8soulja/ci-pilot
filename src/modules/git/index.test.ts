@@ -1,8 +1,11 @@
 import { Chance } from 'chance';
 
 import { getFeatureIdFromBranchName, getVersionTagPrefix } from '../../util';
+import config from '../../config';
 
 import { getMostRecentMatchingTag } from '.';
+
+const { ROOT_PACKAGE_JSON_FILE_PATH } = config;
 
 const chance = Chance();
 
@@ -15,7 +18,7 @@ const dummyVersion = `${chance.integer({ min: 1, max: 10 })}.${chance.integer({ 
   min: 1,
   max: 10,
 })}`;
-const dummyTag = `${getVersionTagPrefix()}${dummyVersion}-alpha.feature.${dummyFeatureId}`;
+const dummyTag = `${getVersionTagPrefix(ROOT_PACKAGE_JSON_FILE_PATH)}${dummyVersion}-alpha.feature.${dummyFeatureId}`;
 
 jest.mock('simple-git/promise', () => {
   return jest.fn().mockImplementation(() => {
@@ -29,7 +32,7 @@ jest.mock('simple-git/promise', () => {
 describe('Git', () => {
   xdescribe('getFeatureIdFromBranchName()', () => {
     it('Returns the name of the Jira ID for the current Git branch', async () => {
-      const featureId = await getFeatureIdFromBranchName();
+      const featureId = await getFeatureIdFromBranchName(ROOT_PACKAGE_JSON_FILE_PATH);
 
       expect(featureId).toBe(dummyFeatureId);
     });

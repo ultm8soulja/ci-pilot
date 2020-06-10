@@ -2,28 +2,13 @@
 
 import minimist from 'minimist';
 
-import { startup, printInfoText, printErrorText } from '../util';
-import { isGitRepository, isWorkingDirectoryClean } from '../modules';
-import config from '../config';
+import { printErrorText } from '../util';
 
-import { publish, Stage } from './publish';
-const { DEV_MODE } = config;
+import { publish, Stage as PublishStage } from './publish';
+import { helper, Helper } from './helper';
+// import { version, Stage as VersionStage } from './version';
 
 (async (): Promise<void> => {
-  startup();
-
-  printInfoText('Running preliminary checks...');
-
-  if (!(await isGitRepository())) {
-    printErrorText('This tool must be run within a Git repository');
-    process.exit(1);
-  }
-
-  if (!DEV_MODE && !(await isWorkingDirectoryClean())) {
-    printErrorText('The Git working directory must be clean');
-    process.exit(1);
-  }
-
   const {
     _: [command, subcommand],
   } = minimist(process.argv.slice(2));
@@ -35,11 +20,16 @@ const { DEV_MODE } = config;
 
   switch (command) {
     case 'publish':
-      publish(subcommand as Stage);
+      publish(subcommand as PublishStage);
       break;
+    case 'helper':
+      helper(subcommand as Helper);
+      break;
+    // case 'version':
+    //   version(subcommand as VersionStage);
+    //   break;
     default:
       printErrorText('Unrecognised command, exiting...');
       process.exit(1);
-      break;
   }
 })();

@@ -1,34 +1,57 @@
-import fs from 'fs';
+import fs, { readdirSync, statSync } from 'fs';
+import { join } from 'path';
 
+import { DepGraph } from 'dependency-graph';
 import { echo, exit, ShellString } from 'shelljs';
-import { JSONSchemaForNPMPackageJsonFiles as PackageJson } from '@schemastore/package';
+import { JSONSchemaForNPMPackageJsonFiles } from '@schemastore/package';
 import { ReleaseType } from 'semver';
 
 import config from '../config';
-import { NextVersionInfo } from '../models';
-import { getCurrentBranchName, getDiff, getNextVersion, isNpmInstalled, isYarnInstalled } from '../modules';
+import { NextVersionInfo, PackageJson } from '../models';
+import {
+  getCurrentBranchName,
+  getDiff,
+  getNextVersion,
+  isNpmInstalled,
+  isYarnInstalled,
+  bumpVersion,
+  createTag,
+  pushToOrigin,
+  reset,
+  publish,
+  isGitHeadTagged,
+  fetchMatchingTags,
+  getMostRecentMatchingTag,
+  getRefHash,
+  isAncestor,
+} from '../modules';
 
 import { printInfoText, printErrorText, printSuccessText, printWarningText } from './console';
 
 const {
   tagSeparator,
   FEATURE_BRANCH_REGEX,
-  PACKAGE_JSON_PATH,
-  LERNA_CONFIG_PATH,
+  LERNA_CONFIG_FILE_PATH,
   PACKAGE_ROOT_PATH,
   REPO_ROOT_PATH,
   SEMVER_ALPHA_PRERELEASE_ID_PREFIX,
   SEMVER_FEATURE_PRERELEASE_ID_PREFIX,
+  PACKAGE_JSON_FILE,
+  DRY_RUN,
   packageManager,
+  gitMethodology,
+  branchNames: { base, development },
 } = config;
 
-export const getPackage = () => {
-  const packageJson: PackageJson = JSON.parse(fs.readFileSync(PACKAGE_JSON_PATH, { encoding: 'utf-8' }));
+export const getPackage = (packagePath: string) => {
+  const packageJson: JSONSchemaForNPMPackageJsonFiles = JSON.parse(
+    fs.readFileSync(`${packagePath}/${PACKAGE_JSON_FILE}`, { encoding: 'utf-8' })
+  );
   return packageJson;
 };
 
-export const getPackageName = () => {
-  const name = getPackage().name;
+export const getPackageName = (packagePath: string) => {
+  const name = getPackage(packagePath).name;
 
   if (!name) {
     throw new Error('Name not found in package');
@@ -37,8 +60,8 @@ export const getPackageName = () => {
   return name;
 };
 
-export const getPackageVersion = () => {
-  const version = getPackage().version;
+export const getPackageVersion = (packagePath: string) => {
+  const version = getPackage(packagePath).version;
 
   if (!version) {
     throw new Error('Version not found in package');
@@ -47,32 +70,20 @@ export const getPackageVersion = () => {
   return version;
 };
 
-export const printInfo = (message: string, packageName?: string) => {
-  if (!packageName) {
-    packageName = getPackageName();
-  }
-  printInfoText(`(${packageName}): ${message}`);
+export const printInfo = (message: string, packageName: string, lineBreak = true) => {
+  printInfoText(`(${packageName}): ${message}`, lineBreak);
 };
 
-export const printWarning = (message: string, packageName?: string) => {
-  if (!packageName) {
-    packageName = getPackageName();
-  }
-  printWarningText(`(${packageName}): ${message}`);
+export const printWarning = (message: string, packageName: string, lineBreak = true) => {
+  printWarningText(`(${packageName}): ${message}`, lineBreak);
 };
 
-export const printError = (message: string, packageName?: string) => {
-  if (!packageName) {
-    packageName = getPackageName();
-  }
-  printErrorText(`(${packageName}): ${message}`);
+export const printError = (message: string, packageName: string, lineBreak = true) => {
+  printErrorText(`(${packageName}): ${message}`, lineBreak);
 };
 
-export const printSuccess = (message: string, packageName?: string) => {
-  if (!packageName) {
-    packageName = getPackageName();
-  }
-  printSuccessText(`(${packageName}): ${message}`);
+export const printSuccess = (message: string, packageName: string, lineBreak = true) => {
+  printSuccessText(`(${packageName}): ${message}`, lineBreak);
 };
 
 export const checkState = ({ code, stderr }: ShellString) => {
@@ -92,8 +103,8 @@ export const isFeatureBranch = (branch: string) => {
   return results[1];
 };
 
-export const getFeatureIdFromBranchName = async () => {
-  const packageName = getPackageName();
+export const getFeatureIdFromBranchName = async (packagePath: string) => {
+  const packageName = getPackageName(packagePath);
   const current = await getCurrentBranchName();
 
   if (!current) {
@@ -106,12 +117,25 @@ export const getFeatureIdFromBranchName = async () => {
   return featureId;
 };
 
-export const isMonorepo = () => {
-  return fs.existsSync(LERNA_CONFIG_PATH) || getPackage().workspaces ? true : false;
+export const getYarnWorkspaces = (rootPath: string) => getPackage(rootPath).workspaces;
+
+export const isYarnWsMonorepo = (rootPath: string) => {
+  const workspaces = getYarnWorkspaces(rootPath);
+  return workspaces && workspaces.length > 0 ? true : false;
 };
 
-export const getVersionTagPrefix = () => {
-  return isMonorepo() ? `${getPackageName()}${tagSeparator}` : '';
+// export const getLernaWorkspaces = (packagePath: string) => getPackage(packagePath).workspaces;
+
+export const isLernaMonorepo = () => {
+  return fs.existsSync(LERNA_CONFIG_FILE_PATH);
+};
+
+export const isMonorepo = () => {
+  return isLernaMonorepo() || isYarnWsMonorepo(REPO_ROOT_PATH) ? true : false;
+};
+
+export const getVersionTagPrefix = (packagePath: string) => {
+  return isMonorepo() ? `${getPackageName(packagePath)}${tagSeparator}` : '';
 };
 
 export const buildFeatureTagPattern = (version: string) => {
@@ -139,13 +163,14 @@ export const buildMonorepoAlphaTagPattern = (tagPrefix: string, version: string)
 };
 
 export const getNextVersionInfo = async (
+  packagePath: string,
   lastTag: string | undefined,
   type: ReleaseType,
   preReleaseId: string
 ): Promise<NextVersionInfo> => {
-  const packageName = getPackageName();
-  const packageVersion = getPackageVersion();
-  const tagPrefix = getVersionTagPrefix();
+  const packageName = getPackageName(packagePath);
+  const packageVersion = getPackageVersion(packagePath);
+  const tagPrefix = getVersionTagPrefix(packagePath);
 
   printInfo('Identify the next version and tag', packageName);
 
@@ -164,9 +189,10 @@ export const getNextVersionInfo = async (
   return { lastTag, tag: nextTag, version: nextVersion };
 };
 
-export const isPackageMutated = async (ancestorRef: string) => {
+export const isPackageMutated = async (packagePath: string, ancestorRef: string) => {
+  const packageName = getPackageName(packagePath);
   const relativePackagePathFromRepoRoot = PACKAGE_ROOT_PATH.replace(REPO_ROOT_PATH, '').replace(/^(\/)/, '');
-  printInfo(`relativePackagePathFromRepoRoot: ${relativePackagePathFromRepoRoot}`);
+  printInfo(`relativePackagePathFromRepoRoot: ${relativePackagePathFromRepoRoot}`, packageName);
   const pattern = new RegExp(relativePackagePathFromRepoRoot);
   const lines = await getDiff(ancestorRef);
 
@@ -183,4 +209,185 @@ export const isPackageManagerInstalled = () => {
   } else {
     return isYarnInstalled();
   }
+};
+
+export const getMonorepoWorkspacePackages = (workspacePath: string) => {
+  const directories = readdirSync(workspacePath).filter(f => statSync(join(workspacePath, f)).isDirectory());
+
+  return directories
+    .map(dir => {
+      try {
+        const packagePath = `${workspacePath}/${dir}`;
+        const content = getPackage(packagePath);
+
+        if (content.private) {
+          printWarningText(`${content.name} is marked as private - excluding...`);
+          return;
+        }
+
+        const myPackage: PackageJson = {
+          packagePath,
+          ...content,
+        };
+        return myPackage;
+      } catch (error) {
+        return undefined;
+      }
+    })
+    .filter(<TValue>(value: TValue | null | undefined): value is TValue => {
+      return value !== null && value !== undefined;
+    });
+};
+
+export const buildPackageDependencyGraph = (packages: PackageJson[]) => {
+  const graph = new DepGraph();
+
+  const packageNames: string[] = [];
+  packages.forEach(p => {
+    if (p.name) {
+      packageNames.push(p.name);
+      graph.addNode(p.name, p);
+    }
+  });
+
+  for (const p of packages) {
+    const packageName = p.name;
+
+    if (!packageName) {
+      continue;
+    }
+
+    for (const name of packageNames) {
+      if (packageName === name) {
+        continue;
+      }
+
+      if (p.dependencies && p.dependencies[name]) {
+        graph.addDependency(packageName, name);
+      } else if (p.devDependencies && p.devDependencies[name]) {
+        graph.addDependency(packageName, name);
+      }
+    }
+  }
+
+  return graph;
+};
+
+export const gitVersionAndTag = async (packagePath: string, { version, tag }: NextVersionInfo, commitToGit = false) => {
+  const packageName = getPackageName(packagePath);
+  printInfo(`Finalising version, bumping to ${version} (tag: ${tag})`, packageName);
+
+  printInfo('Set the version for the package, and tag HEAD with the same version', packageName);
+  bumpVersion(packagePath, version, false);
+
+  if (commitToGit) {
+    // TODO: Add commit function to git module
+  }
+
+  await createTag(tag);
+  await pushToOrigin(tag);
+};
+
+export const gitCleanWorkingDirectory = async () => {
+  printInfoText('Clean-up Git working directory');
+  await reset('hard');
+};
+
+export const publishPackage = async (packagePath: string, nextTag: string) => {
+  const packageName = getPackageName(packagePath);
+  printInfo('Publish package and push new tag to remote', packageName);
+  const npmDistTag = isMonorepo() ? nextTag : `tag${tagSeparator}${nextTag}`;
+  publish(packagePath, npmDistTag);
+};
+
+export const finaliseVersion = async (packagePath: string, versionInfo: NextVersionInfo, commitToGit = false) => {
+  await gitVersionAndTag(packagePath, versionInfo, commitToGit);
+  await pushToOrigin(versionInfo.tag);
+
+  if (!commitToGit) {
+    await gitCleanWorkingDirectory();
+  }
+};
+
+export const finaliseVersionAndPublish = async (
+  packagePath: string,
+  versionInfo: NextVersionInfo,
+  commitToGit = false
+) => {
+  if (DRY_RUN) {
+    printWarningText('Dry run mode so skipping git version and tag');
+    return false;
+  }
+
+  await gitVersionAndTag(packagePath, versionInfo, commitToGit);
+  await pushToOrigin(versionInfo.tag);
+  await publishPackage(packagePath, versionInfo.tag);
+  await gitCleanWorkingDirectory();
+
+  return true;
+};
+
+export const prepareNextFeatureVersion = async (packagePath: string) => {
+  const packageName = getPackageName(packagePath);
+  const parentBranch = gitMethodology === 'GitFlow' ? development : base;
+  const packageVersion = getPackageVersion(packagePath);
+  const tagPrefix = getVersionTagPrefix(packagePath);
+  const featureId = await getFeatureIdFromBranchName(packagePath);
+  const prereleaseVersion = getNextVersion(packageVersion, 'patch');
+  const featurePrereleaseId = buildFeaturePrereleaseId(featureId);
+  const lastTagPatternPartial = isMonorepo()
+    ? buildMonorepoFeatureTagPattern(tagPrefix, prereleaseVersion)
+    : buildFeatureTagPattern(prereleaseVersion);
+
+  // const lastTagPattern = `${lastTagPatternPartial}*`;
+  const lastTagPatternStrict = `${lastTagPatternPartial}${featureId}.*`;
+
+  if (isGitHeadTagged(lastTagPatternStrict)) {
+    printWarning('Feature tag found at HEAD of this branch, thus no publishing is necessary, exiting...', packageName);
+    return;
+  }
+
+  // Git fetch matching remote tags
+  await fetchMatchingTags(lastTagPatternStrict);
+
+  // Get last tag
+  const lastTag = await getMostRecentMatchingTag(lastTagPatternStrict);
+  let ancestor: string;
+
+  if (lastTag) {
+    ancestor = lastTag;
+    const gitHash = await getRefHash(lastTag);
+
+    if (!isAncestor(gitHash, 'HEAD')) {
+      ancestor = parentBranch;
+    }
+  } else {
+    ancestor = parentBranch;
+  }
+
+  if (!(await isPackageMutated(packagePath, ancestor))) {
+    printWarning('No changes in the package', packageName);
+    return;
+  }
+
+  printInfo('Found changes in the package, will commence with publish', packageName);
+
+  return await getNextVersionInfo(packagePath, lastTag, 'prerelease', featurePrereleaseId);
+};
+
+export const getMonorepoPackages = async () => {
+  const yarnWorkspaces = getYarnWorkspaces(REPO_ROOT_PATH);
+  const workspaces: string[] = [];
+
+  if (yarnWorkspaces) {
+    yarnWorkspaces.forEach(ws => workspaces.push(ws.replace('/*', '')));
+  } /*  else if (isLernaMonorepo()) {
+      
+    } */ else {
+    throw new Error('Could not find mono-repo workspaces');
+  }
+
+  return workspaces
+    .map(ws => getMonorepoWorkspacePackages(`${REPO_ROOT_PATH}/${ws}`))
+    .reduce((acc, val) => acc.concat(val), []);
 };
