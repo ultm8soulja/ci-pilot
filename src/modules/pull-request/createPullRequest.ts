@@ -22,6 +22,11 @@ export const createPullRequest = async (rcBranch: string, newVersion: string) =>
   const currentBranch = await getCurrentBranchName();
   const remote = await getRepositoryName();
 
+  if (!GH_TOKEN) {
+    printErrorText('GH_TOKEN is required to create a pull request');
+    process.exit(1);
+  }
+
   printInfoText(`attempting to open release request in ${remote}`);
 
   const body = await parseReleaseRequest();

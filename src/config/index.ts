@@ -24,9 +24,7 @@ const DEV_MODE = get('DEV_MODE')
   .default('false')
   .asBoolStrict();
 
-export const GH_TOKEN = get('GH_TOKEN')
-  .required()
-  .asString();
+export const GH_TOKEN = get('GH_TOKEN').asString();
 
 /* Constants */
 
