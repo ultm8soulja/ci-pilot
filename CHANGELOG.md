@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/ultm8soulja/ci-pilot/compare/v1.1.1...v1.2.0) (2020-06-10)
+
+
+### Features
+
+* Enhance CLI ([#3](https://github.com/ultm8soulja/ci-pilot/issues/3)) ([14c58fb](https://github.com/ultm8soulja/ci-pilot/commit/14c58fb75a130fbeaf89b0ee2ee27cc17a6cf32c))
+
 ## [1.1.1](https://github.com/ultm8soulja/ci-pilot/compare/v1.1.0...v1.1.1) (2020-05-12)
 
 
