@@ -6,14 +6,14 @@ import github from 'gh-got';
 
 import { getCurrentBranchName, getRepositoryName } from '../git';
 import config, { GH_TOKEN } from '../../config';
-import { printInfoText, printErrorText, printSuccessText, printError } from '../../util';
+import { printInfoText, printErrorText, printSuccessText } from '../../util';
 
 const parseReleaseRequest = async () => {
   try {
     const file = readFileSync(config.RELEASE_REQUEST_PATH, { encoding: 'utf-8' });
     return file;
   } catch (err) {
-    printErrorText('either there is no RELEASE_REQUEST.md file present or it is invalid');
+    printInfoText('no RELEASE_REQUEST.md was found, your release request will be opened with an empty description');
     return '';
   }
 };
