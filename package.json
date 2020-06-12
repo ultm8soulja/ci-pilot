@@ -1,6 +1,6 @@
 {
   "name": "ci-pilot",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Automate your CI pipeline with ease - you'll find binaries and functions that help you simplify the process",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

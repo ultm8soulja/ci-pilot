@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/ultm8soulja/ci-pilot/compare/v1.3.0...v1.4.0) (2020-06-12)
+
+
+### Features
+
+* add pull request script ([#5](https://github.com/ultm8soulja/ci-pilot/issues/5)) ([b7777fe](https://github.com/ultm8soulja/ci-pilot/commit/b7777fe59b6ba4c7d69473c136e182d975c79cd7))
+
 # [1.3.0](https://github.com/ultm8soulja/ci-pilot/compare/v1.2.0...v1.3.0) (2020-06-10)
 
 
