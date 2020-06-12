@@ -59,6 +59,7 @@ export const checkoutBranch = async (branch: string) => {
   const git = simpleGit();
   try {
     await git.checkout(branch);
+    await git.pull();
   } catch (error) {
     if ((error.message as string).includes('did not match any file(s) known to git')) {
       throw new Error(`'${branch}' branch does not exist`);
@@ -153,11 +154,14 @@ export const getDiff = async (refOne: string, refTwo = 'HEAD') => {
   return diff.split('\n');
 };
 
+export const stageFiles = async (files: string[]) => {
+  const git = simpleGit();
+  await git.add(files);
+};
+
 export const commit = async (message: string, files?: string[]) => {
   const git = simpleGit();
-  const commitSummary = await git.commit(message, files);
-
-  printInfoText(`Committed changes => \n${commitSummary}`);
+  await git.commit(message, files, { '--no-verify': true });
 };
 
 export const getRepositoryName = async () => {
