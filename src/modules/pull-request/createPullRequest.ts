@@ -32,6 +32,7 @@ export const createPullRequest = async (rcBranch: string, newVersion: string) =>
   const body = await parseReleaseRequest();
 
   try {
+    // GitHub documentation: https://developer.github.com/v3/pulls/#create-a-pull-request
     await github.post(`repos/${remote}/pulls`, {
       token: GH_TOKEN,
       body: {
@@ -39,6 +40,7 @@ export const createPullRequest = async (rcBranch: string, newVersion: string) =>
         head: currentBranch,
         base: rcBranch,
         body: `${body} \n\n\n*created by ci-pilot*`,
+        draft: true,
       },
     });
   } catch (err) {
