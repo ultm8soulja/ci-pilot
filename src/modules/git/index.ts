@@ -145,3 +145,15 @@ export const getDiff = async (refOne: string, refTwo = 'HEAD') => {
   printInfoText(`Changes => \n${diff}`);
   return diff.split('\n');
 };
+
+export const getRepositoryName = async () => {
+  const git = simpleGit();
+  const remotes = await git.getRemotes(true);
+  const originRemote = remotes.filter(remote => remote.name === 'origin')[0];
+  const repositoryName = originRemote.refs.push
+    ?.split('git@github.com:')
+    ?.pop()
+    ?.split('.git')[0];
+
+  return repositoryName;
+};
