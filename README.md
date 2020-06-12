@@ -47,7 +47,9 @@ yarn add -D ci-pilot
 ## Commands
 
 1. `ci-pilot publish feature`
-1. `ci-pilot release init`
+1. `ci-pilot release-gh-gf init`
+1. `ci-pilot release-gh-gf stage`
+1. `ci-pilot release-gh-gf finish`
 
 ## Ethos
 

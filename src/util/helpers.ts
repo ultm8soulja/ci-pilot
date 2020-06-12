@@ -31,6 +31,7 @@ import { printInfoText, printErrorText, printSuccessText, printWarningText } fro
 const {
   tagSeparator,
   FEATURE_BRANCH_REGEX,
+  GITFLOW_RELEASE_BRANCH_REGEX,
   LERNA_CONFIG_FILE_PATH,
   PACKAGE_ROOT_PATH,
   REPO_ROOT_PATH,
@@ -93,11 +94,21 @@ export const checkState = ({ code, stderr }: ShellString) => {
   }
 };
 
-export const isFeatureBranch = (branch: string) => {
+export const checkFeatureBranch = (branch: string) => {
   const results = FEATURE_BRANCH_REGEX.exec(branch);
 
   if (!results) {
     throw new Error(`'${branch}' is not a feature branch`);
+  }
+
+  return results[1];
+};
+
+export const checkGitFlowReleaseBranch = (branch: string) => {
+  const results = GITFLOW_RELEASE_BRANCH_REGEX.exec(branch);
+
+  if (!results) {
+    throw new Error(`'${branch}' is not a GitFlow release branch`);
   }
 
   return results[1];
@@ -111,7 +122,7 @@ export const getFeatureIdFromBranchName = async (packagePath: string) => {
     throw new Error('Current branch not available');
   }
 
-  const featureId = isFeatureBranch(current);
+  const featureId = checkFeatureBranch(current);
 
   printInfo(`Feature ID for branch '${current}' is ${featureId}`, packageName);
   return featureId;

@@ -15,6 +15,7 @@ export const defaultBranches: BranchNames = {
   development: 'develop',
   feature: 'feature',
   hotfix: 'hotfix',
+  release: 'release',
 };
 
 export const validateAndProcessFileConfig = (config: CIPilotFileConfig) => {

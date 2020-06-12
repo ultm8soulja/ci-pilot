@@ -4,19 +4,20 @@ import { printInfoText, printErrorText, startup } from '../../util';
 import { isGitRepository, isWorkingDirectoryClean } from '../../modules';
 import config from '../../config';
 
-import { stageReleaseCandidateHead } from './stageRelease';
+import { stageReleaseCandidateHead } from './stage';
+import { finishRelease } from './finish';
 
 import { initRelease } from '.';
 
 const { DEV_MODE } = config;
 
-const steps = ['init', 'stage'] as const;
+const steps = ['init', 'stage', 'finish'] as const;
 export type Step = typeof steps[number];
 
-export const release = async (step: Step) => {
+export const releaseGitHubGitFlow = async (step: Step) => {
   startup();
 
-  printInfoText(`> ci-pilot release [step]`);
+  printInfoText(`> ci-pilot release-gh-gf [step]`);
   if (!step) {
     printErrorText('No step chosen, exiting...');
     process.exit(1);
@@ -37,6 +38,8 @@ export const release = async (step: Step) => {
     process.exit(1);
   }
 
+  printInfoText(`Release GitHub GitFlow: ${step} ...`);
+
   try {
     switch (step) {
       case 'init':
@@ -44,6 +47,9 @@ export const release = async (step: Step) => {
         break;
       case 'stage':
         await stageReleaseCandidateHead();
+        break;
+      case 'finish':
+        await finishRelease();
         break;
     }
   } catch (error) {

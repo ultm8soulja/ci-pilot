@@ -1,5 +1,7 @@
+import { writeFileSync } from 'fs';
+
 import { printSuccessText } from '../../util';
-import { getCurrentBranchName, checkoutBranch, createBranch, pushToOrigin } from '../../modules';
+import { getCurrentBranchName, checkoutBranch, createBranch, pushToOrigin, commit } from '../../modules';
 import config from '../../config';
 
 const { branchNames } = config;
@@ -14,6 +16,10 @@ export const initRelease = async () => {
   const releaseInitBranchName = `rc-${new Date().getTime()}-do-not-use`;
 
   await createBranch(releaseInitBranchName);
+
+  writeFileSync('RELEASE', releaseInitBranchName);
+
+  await commit('chore: => Base branch reference');
 
   await pushToOrigin(releaseInitBranchName);
 

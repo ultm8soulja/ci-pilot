@@ -6,6 +6,7 @@ export interface BranchNames {
   hotfix: string;
   development: string;
   bugfix: string;
+  release: string;
 }
 
 export const gitMethodologies = ['GitFlow', 'GitHubFlow'] as const;
