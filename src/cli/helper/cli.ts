@@ -23,15 +23,13 @@ export const helper = async (helper: Helper) => {
         printSuccessText(getPackageName(PACKAGE_JSON_FILE_PATH), false);
         break;
       case 'is-repo-gitflow':
-        try {
-          checkIsGitFlowRepository();
-          printSuccessText('Yes, this repository follows GitFlow');
-        } catch (error) {
-          printErrorText(error.message);
-        }
+        checkIsGitFlowRepository();
+        printSuccessText('Yes, this repository follows GitFlow');
         break;
     }
   } catch (error) {
     printErrorText(`${error.message}`);
+    printErrorText('Exiting ...');
+    process.exit(1);
   }
 };
