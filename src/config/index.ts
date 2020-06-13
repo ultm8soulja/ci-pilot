@@ -76,7 +76,7 @@ const {
   branchNames: { feature, release },
 } = fileConfig;
 const FEATURE_BRANCH_REGEX = new RegExp(`^${feature}\/([A-Za-z]{2,}-[1-9]{1}[0-9]{0,})`);
-const GITFLOW_RELEASE_BRANCH_REGEX = new RegExp(`^${release}\/\d+\.\d+\.\d+$`);
+const GITFLOW_RELEASE_BRANCH_REGEX = new RegExp(`^${release}\/\\d+\.\\d+\.\\d+$`);
 const GH_GF_BASE_RELEASE_BRANCH_REGEX = new RegExp('^rc-\\d{7,}-do-not-use$');
 const SEMVER_FEATURE_PRERELEASE_ID_PREFIX = `alpha.${feature}.`;
 const SEMVER_ALPHA_PRERELEASE_ID_PREFIX = 'alpha.';

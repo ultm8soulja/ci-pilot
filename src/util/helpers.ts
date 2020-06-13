@@ -123,7 +123,7 @@ export const checkGfGhBaseReleaseBranch = (branch: string) => {
     throw new Error(`'${branch}' is not a GitHub-GitFlow base release candidate branch`);
   }
 
-  return results[1];
+  return results[0];
 };
 
 export const getFeatureIdFromBranchName = async (packagePath: string) => {

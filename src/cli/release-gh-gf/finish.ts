@@ -11,7 +11,7 @@ import {
 } from '../../modules';
 import config from '../../config';
 
-const { branchNames, PACKAGE_JSON_FILE_PATH } = config;
+const { branchNames, REPO_ROOT_PATH } = config;
 
 export const finishRelease = async () => {
   // Ensure the current branch is a release base branch
@@ -26,10 +26,11 @@ export const finishRelease = async () => {
   await checkoutBranch(releaseBaseBranchName);
 
   // Check version from package.json and ensure a git tag of the same name exists locally
-  const version = getPackageVersion(PACKAGE_JSON_FILE_PATH);
+  const version = getPackageVersion(REPO_ROOT_PATH);
+  const tagPattern = `*${version}`;
 
   let tag: string;
-  if (!isGitHeadTagged(version) || !(tag = (await getMostRecentMatchingTag(version)) as string)) {
+  if (!isGitHeadTagged(tagPattern) || !(tag = (await getMostRecentMatchingTag(tagPattern)) as string)) {
     throw new Error(
       `Expected Git tag for next version '${version}' not found on the head of '${releaseBaseBranchName}'`
     );
