@@ -7,7 +7,7 @@ import { printErrorText } from '../util';
 import { publish, Stage as PublishStage } from './publish';
 import { helper, Helper } from './helper';
 // import { version, Stage as VersionStage } from './version';
-import { releaseGitHubGitFlow, Step as ReleaseStep } from './releaseGitHubGitFlow';
+import { releaseGitHubGitFlow, Step as ReleaseStep } from './release-gh-gf';
 
 (async (): Promise<void> => {
   const {
