@@ -32,6 +32,7 @@ const {
   tagSeparator,
   FEATURE_BRANCH_REGEX,
   GITFLOW_RELEASE_BRANCH_REGEX,
+  GH_GF_BASE_RELEASE_BRANCH_REGEX,
   LERNA_CONFIG_FILE_PATH,
   PACKAGE_ROOT_PATH,
   REPO_ROOT_PATH,
@@ -109,6 +110,16 @@ export const checkGitFlowReleaseBranch = (branch: string) => {
 
   if (!results) {
     throw new Error(`'${branch}' is not a GitFlow release branch`);
+  }
+
+  return results[1];
+};
+
+export const checkGfGhBaseReleaseBranch = (branch: string) => {
+  const results = GH_GF_BASE_RELEASE_BRANCH_REGEX.exec(branch);
+
+  if (!results) {
+    throw new Error(`'${branch}' is not a GitHub-GitFlow base release candidate branch`);
   }
 
   return results[1];

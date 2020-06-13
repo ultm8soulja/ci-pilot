@@ -89,6 +89,10 @@ Default (fully expanded):
     "development": "develop",
     "bugfix": "bugfix"
   },
+  "release": {
+    "changelogPreset": "angular",
+    "versionPrefix": "v"
+  },
   "gitBranchSeparator": "/",
   "tagSeparator": "#"
 }

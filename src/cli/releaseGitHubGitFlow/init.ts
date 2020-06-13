@@ -13,21 +13,21 @@ export const initRelease = async () => {
     await checkoutBranch(branchNames.development);
   }
 
-  const releaseInitBranchName = `rc-${new Date().getTime()}-do-not-use`;
+  const releaseBaseBranchName = `rc-${new Date().getTime()}-do-not-use`;
   const relicName = 'RELEASE';
 
-  await createBranch(releaseInitBranchName);
+  await createBranch(releaseBaseBranchName);
 
-  writeFileSync(relicName, releaseInitBranchName);
+  writeFileSync(relicName, releaseBaseBranchName);
 
   await stageFiles([relicName]);
   await commit('chore(release): => Base branch reference', [relicName]);
 
-  await pushToOrigin(releaseInitBranchName);
+  await pushToOrigin(releaseBaseBranchName);
 
   await checkoutBranch(branchNames.development);
 
   printSuccessText(
-    `Base release candidate branch '${releaseInitBranchName}' successfully created and pushed to origin`
+    `Base release candidate branch '${releaseBaseBranchName}' successfully created and pushed to origin`
   );
 };

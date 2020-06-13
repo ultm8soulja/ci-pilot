@@ -9,6 +9,11 @@ export const getCurrentBranchName = async () => {
   return current;
 };
 
+export const moveTag = async (tag: string, destinationRef = 'HEAD') => {
+  const git = simpleGit();
+  await git.tag(['-f', tag, destinationRef]);
+};
+
 export const getMostRecentMatchingTag = async (pattern: string) => {
   const git = simpleGit();
   const tags = await git.tags([pattern, { '--sort': '-v:refname' }]);
@@ -174,4 +179,14 @@ export const getRepositoryName = async () => {
     ?.split('.git')[0];
 
   return repositoryName;
+};
+
+export const merge = async (from: string, to: string) => {
+  const git = simpleGit();
+  await git.mergeFromTo(from, to, ['--no-ff', '--abort', '--no-verify']);
+};
+
+export const deleteLocalBranch = async (branch: string) => {
+  const git = simpleGit();
+  await git.deleteLocalBranch(branch, true);
 };

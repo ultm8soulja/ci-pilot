@@ -1,6 +1,6 @@
 import includes from 'lodash/includes';
 
-import { printInfoText, printErrorText, startup } from '../../util';
+import { printInfoText, printErrorText, startup, isMonorepo } from '../../util';
 import { isGitRepository, isWorkingDirectoryClean } from '../../modules';
 import config from '../../config';
 
@@ -27,6 +27,20 @@ export const releaseGitHubGitFlow = async (step: Step) => {
   }
 
   printInfoText('Running preliminary checks...');
+
+  if (await isMonorepo()) {
+    printErrorText("This command doesn't presently support monorepos");
+    process.exit(1);
+  }
+
+  // Check that master and develop exist
+  // - if they are not already local, fetch them
+  // - if they already exist locally ensure they have and upstream, otherwise exit (git ls-remote --heads origin master)
+
+  // if (await gitflo()) {
+  //   printErrorText("This command doesn't presently support monorepos");
+  //   process.exit(1);
+  // }
 
   if (!(await isGitRepository())) {
     printErrorText('This command must be run within a Git repository');
