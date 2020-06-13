@@ -24,6 +24,7 @@ import {
   getMostRecentMatchingTag,
   getRefHash,
   isAncestor,
+  isRemoteBranchExist,
 } from '../modules';
 
 import { printInfoText, printErrorText, printSuccessText, printWarningText } from './console';
@@ -412,4 +413,32 @@ export const getMonorepoPackages = async () => {
   return workspaces
     .map(ws => getMonorepoWorkspacePackages(`${REPO_ROOT_PATH}/${ws}`))
     .reduce((acc, val) => acc.concat(val), []);
+};
+
+export const checkIsGitFlowRepository = () => {
+  try {
+    const anError = new Error();
+    anError.name = 'IsGitFlowError';
+
+    if (!isRemoteBranchExist(base)) {
+      anError.message = `Base branch '${base}' doesn't exist remotely`;
+      throw anError;
+    }
+
+    if (!isRemoteBranchExist(development)) {
+      anError.message = `Development branch '${development}' doesn't exist remotely`;
+      throw anError;
+    }
+
+    if (!isAncestor(base, development)) {
+      anError.message = `'${base}' is supposed to be an ancestor of '${development}'`;
+      throw anError;
+    }
+  } catch (error) {
+    if (error.name === 'IsGitFlowError') {
+      throw new Error(`This repository doesn't appear to follow GitFlow: ${error.message}`);
+    } else {
+      throw new Error(`Unexpected error whilst detecting if this repository is a GitFlow one: ${error.message}`);
+    }
+  }
 };
