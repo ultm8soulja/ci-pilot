@@ -40,17 +40,18 @@ export const finishRelease = async () => {
 
   // Merge rc base branch into master and push to remote
   await merge(releaseBaseBranchName, branchNames.base);
-  await pushToOrigin(branchNames.base);
+  // await pushToOrigin(branchNames.base);
 
   // Move tag from head of rc to master head, and push to origin
   await moveTag(tag, branchNames.base);
+  // await pushToOrigin(tag);
 
   // Checkout develop branch and pull latest version
   await checkoutBranch(branchNames.development);
 
   // Merge rc branch into develop and push to remote
   await merge(releaseBaseBranchName, branchNames.development);
-  await pushToOrigin(branchNames.development);
+  // await pushToOrigin(branchNames.development);
 
   // Delete rc base from remote and local
   await deleteLocalBranch(releaseBaseBranchName);
