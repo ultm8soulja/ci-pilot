@@ -24,7 +24,7 @@ const DEV_MODE = get('DEV_MODE')
   .default('false')
   .asBoolStrict();
 
-export const GH_TOKEN = get('GH_TOKEN').asString();
+const GITHUB_TOKEN = get('GITHUB_TOKEN').asString();
 
 /* Constants */
 
@@ -100,6 +100,7 @@ const out = {
   PACKAGE_JSON_FILE,
   CWD,
   RELEASE_REQUEST_PATH,
+  GITHUB_TOKEN,
 
   ...fileConfig,
 
