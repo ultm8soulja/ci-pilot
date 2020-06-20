@@ -13,6 +13,7 @@ import {
   stageFiles,
   getNextVersion,
   deleteLocalBranch,
+  createPullRequest,
 } from '../../modules';
 import config from '../../config';
 
@@ -66,6 +67,8 @@ export const cutRelease = async () => {
     await pushToOrigin(releaseBranchName);
 
     printInfoText(`Next release branch '${releaseBranchName}' successfully created and pushed to origin`);
+
+    await createPullRequest(releaseBaseBranchName, nextVersion);
 
     // Clean-up local branches
 

@@ -47,7 +47,7 @@ yarn add -D ci-pilot
 ## Commands
 
 1. `ci-pilot publish feature`
-1. `ci-pilot release-gh-gf init`
+1. `ci-pilot release-gh-gf cut`
 1. `ci-pilot release-gh-gf stage`
 1. `ci-pilot release-gh-gf finish`
 
@@ -90,8 +90,7 @@ Default (fully expanded):
     "bugfix": "bugfix"
   },
   "release": {
-    "changelogPreset": "angular",
-    "versionPrefix": "v"
+    "preset": "angular"
   },
   "gitBranchSeparator": "/",
   "tagSeparator": "#"
