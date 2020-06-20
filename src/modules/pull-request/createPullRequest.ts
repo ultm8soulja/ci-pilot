@@ -13,7 +13,7 @@ const parseReleaseRequest = async () => {
     const file = readFileSync(config.RELEASE_REQUEST_PATH, { encoding: 'utf-8' });
     return file;
   } catch (err) {
-    printInfoText('no RELEASE_REQUEST.md was found, your release request will be opened with an empty description');
+    printInfoText('No RELEASE_REQUEST.md was found, your release request will be opened with an empty description');
     return '';
   }
 };
@@ -27,7 +27,7 @@ export const createPullRequest = async (rcBranch: string, newVersion: string) =>
     process.exit(1);
   }
 
-  printInfoText(`attempting to open release request in ${remote}`);
+  printInfoText(`Attempting to open release request in ${remote}`);
 
   const body = await parseReleaseRequest();
 
@@ -44,7 +44,7 @@ export const createPullRequest = async (rcBranch: string, newVersion: string) =>
       },
     });
   } catch (err) {
-    printErrorText('failed to create pull request in repository');
+    printErrorText('Failed to create pull request in repository');
     // gh-got provides helpful error messages, however, we have to dig
     // a little bit to get them.
     const prettyError = err?.response?.body?.errors?.[0];
@@ -57,5 +57,5 @@ export const createPullRequest = async (rcBranch: string, newVersion: string) =>
     return;
   }
 
-  printSuccessText('release request opened');
+  printSuccessText('Release pull request opened');
 };
