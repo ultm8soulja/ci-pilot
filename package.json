@@ -55,6 +55,7 @@
     "@types/chalk": "^2.2.0",
     "@types/chance": "^1.0.10",
     "@types/clear": "^0.1.0",
+    "@types/conventional-recommended-bump": "^6.0.0",
     "@types/figlet": "^1.2.0",
     "@types/find-root": "^1.1.1",
     "@types/inquirer": "^6.5.0",
@@ -88,6 +89,7 @@
   "dependencies": {
     "chalk": "^3.0.0",
     "clear": "^0.1.0",
+    "conventional-recommended-bump": "^6.0.9",
     "dotenv": "^8.2.0",
     "env-var": "^6.1.1",
     "figlet": "^1.2.4",

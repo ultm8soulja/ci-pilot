@@ -6,12 +6,11 @@ import config from '../../config';
 
 import { stageReleaseCandidateHead } from './stage';
 import { finishRelease } from './finish';
-
-import { initRelease } from '.';
+import { cutRelease } from './cut';
 
 const { DEV_MODE } = config;
 
-const steps = ['init', 'stage', 'finish'] as const;
+const steps = ['cut', 'stage', 'finish'] as const;
 export type Step = typeof steps[number];
 
 export const releaseGitHubGitFlow = async (step: Step) => {
@@ -49,8 +48,8 @@ export const releaseGitHubGitFlow = async (step: Step) => {
     checkIsGitFlowRepository();
 
     switch (step) {
-      case 'init':
-        await initRelease();
+      case 'cut':
+        await cutRelease();
         break;
       case 'stage':
         await stageReleaseCandidateHead();

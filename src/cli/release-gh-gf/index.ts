@@ -1,3 +1,3 @@
 export * from './cli';
-export * from './init';
+export * from './cut';
 export * from './stage';

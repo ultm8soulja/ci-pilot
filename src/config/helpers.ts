@@ -7,6 +7,7 @@ import {
   gitBranchSeparators,
   gitMethodologies,
   packageManagers,
+  Release,
 } from '../models';
 
 export const defaultBranches: BranchNames = {
@@ -18,11 +19,21 @@ export const defaultBranches: BranchNames = {
   release: 'release',
 };
 
+export const defaultRelease: Release = {
+  preset: 'angular',
+};
+
 export const validateAndProcessFileConfig = (config: CIPilotFileConfig) => {
   if (!config.branchNames) {
     config.branchNames = defaultBranches;
   } else {
     config.branchNames = Object.assign(defaultBranches, config.branchNames);
+  }
+
+  if (!config.release) {
+    config.release = defaultRelease;
+  } else {
+    config.release = Object.assign(defaultRelease, config.release);
   }
 
   if (!config.gitMethodology) {
