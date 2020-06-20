@@ -26,6 +26,8 @@ const {
   release: { preset },
 } = config;
 
+const relicName = 'RELEASE';
+
 export const BASE_BRANCH_COMMIT_MSG = 'chore(release): => Base branch reference';
 
 export const cutRelease = async () => {
@@ -37,14 +39,8 @@ export const cutRelease = async () => {
     }
 
     const releaseBaseBranchName = `rc-${new Date().getTime()}-do-not-use`;
-    const relicName = 'RELEASE';
 
     await createBranch(releaseBaseBranchName);
-
-    writeFileSync(relicName, releaseBaseBranchName);
-
-    await stageFiles([relicName]);
-    await commit(BASE_BRANCH_COMMIT_MSG, [relicName]);
 
     await pushToOrigin(releaseBaseBranchName);
 
@@ -64,6 +60,12 @@ export const cutRelease = async () => {
     const releaseBranchName = `${branchNames.release}${gitBranchSeparator}${nextVersion}`;
 
     await createBranch(releaseBranchName);
+
+    writeFileSync(relicName, releaseBaseBranchName);
+
+    await stageFiles([relicName]);
+    await commit(BASE_BRANCH_COMMIT_MSG, [relicName]);
+
     await pushToOrigin(releaseBranchName);
 
     printInfoText(`Next release branch '${releaseBranchName}' successfully created and pushed to origin`);
