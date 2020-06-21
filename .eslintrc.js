@@ -31,6 +31,6 @@ module.exports = {
         alwaysTryTypes: true,
       },
     },
-    'import/ignore': ['/simple-git*/', '/find-root/', '/clear/', '/minimist/', '/lodash*/', '/find-package-json/'],
+    'import/ignore': ['/simple-git*/', '/find-root/', '/clear/', '/minimist/', '/lodash*/', '/find-package-json/', '/standard-version/', '/conventional-recommended-bump/'],
   },
 };

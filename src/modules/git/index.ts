@@ -9,6 +9,23 @@ export const getCurrentBranchName = async () => {
   return current;
 };
 
+export const isRemoteBranchExist = (branch: string) => {
+  const { code, stderr } = exec(`git show-ref --verify --quiet 'refs/remotes/origin/${branch}'`, { silent: true });
+
+  if (code === 0) {
+    return true;
+  } else if (code === 1) {
+    return false;
+  } else {
+    throw new Error(`Unexpected: ${stderr}`);
+  }
+};
+
+export const moveTag = async (tag: string, destinationRef = 'HEAD') => {
+  const git = simpleGit();
+  await git.tag(['-f', tag, destinationRef]);
+};
+
 export const getMostRecentMatchingTag = async (pattern: string) => {
   const git = simpleGit();
   const tags = await git.tags([pattern, { '--sort': '-v:refname' }]);
@@ -57,7 +74,15 @@ export const fetchMatchingTags = async (pattern: string) => {
 
 export const checkoutBranch = async (branch: string) => {
   const git = simpleGit();
-  await git.checkout(branch);
+  try {
+    await git.checkout(branch);
+    await git.pull();
+  } catch (error) {
+    if ((error.message as string).includes('did not match any file(s) known to git')) {
+      throw new Error(`'${branch}' branch does not exist`);
+    }
+    throw error;
+  }
 };
 
 export const createBranch = async (branch: string) => {
@@ -106,8 +131,8 @@ export const getRefHash = async (ref: string): Promise<string> => {
   return hash;
 };
 
-export const isAncestor = (commitOne: string, commitTwo: string) => {
-  const { code, stderr } = exec(`git merge-base --is-ancestor ${commitOne} ${commitTwo}`, { silent: true });
+export const isAncestor = (refOne: string, refTwo: string) => {
+  const { code, stderr } = exec(`git merge-base --is-ancestor ${refOne} ${refTwo}`, { silent: true });
 
   if (code === 0) {
     return true;
@@ -117,10 +142,10 @@ export const isAncestor = (commitOne: string, commitTwo: string) => {
     printErrorText(stderr);
 
     let msg;
-    if (new RegExp(commitOne).test(stderr)) {
-      msg = `commitOne '${commitOne}' is not a valid commit`;
-    } else if (new RegExp(commitTwo).test(stderr)) {
-      msg = `commitOne '${commitTwo}' is not a valid commit`;
+    if (new RegExp(refOne).test(stderr)) {
+      msg = `'${refOne}' is not a valid Git ref`;
+    } else if (new RegExp(refTwo).test(stderr)) {
+      msg = `'${refTwo}' is not a valid Git ref`;
     } else {
       msg = `Unexpected: ${stderr}`;
     }
@@ -146,6 +171,16 @@ export const getDiff = async (refOne: string, refTwo = 'HEAD') => {
   return diff.split('\n');
 };
 
+export const stageFiles = async (files: string[]) => {
+  const git = simpleGit();
+  await git.add(files);
+};
+
+export const commit = async (message: string, files?: string[]) => {
+  const git = simpleGit();
+  await git.commit(message, files, { '--no-verify': true });
+};
+
 export const getRepositoryName = async () => {
   const git = simpleGit();
   const remotes = await git.getRemotes(true);
@@ -156,4 +191,24 @@ export const getRepositoryName = async () => {
     ?.split('.git')[0];
 
   return repositoryName;
+};
+
+export const merge = async (from: string, to: string) => {
+  const git = simpleGit();
+  await git.mergeFromTo(from, to, ['--no-ff', '--no-verify']);
+};
+
+export const deleteLocalBranch = async (branch: string) => {
+  const git = simpleGit();
+  await git.deleteLocalBranch(branch, true);
+};
+
+export const deleteRemoteRef = async (ref: string) => {
+  const git = simpleGit();
+  await git.push('origin', ref, { '--delete': null });
+};
+
+export const fetchBranch = async (branch: string) => {
+  const git = simpleGit();
+  await git.raw(['fetch', 'origin', `${branch}:${branch}`]);
 };

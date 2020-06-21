@@ -24,6 +24,9 @@ import {
   getMostRecentMatchingTag,
   getRefHash,
   isAncestor,
+  isRemoteBranchExist,
+  deleteLocalBranch,
+  deleteRemoteRef,
 } from '../modules';
 
 import { printInfoText, printErrorText, printSuccessText, printWarningText } from './console';
@@ -31,6 +34,8 @@ import { printInfoText, printErrorText, printSuccessText, printWarningText } fro
 const {
   tagSeparator,
   FEATURE_BRANCH_REGEX,
+  GITFLOW_RELEASE_BRANCH_REGEX,
+  GH_GF_BASE_RELEASE_BRANCH_REGEX,
   LERNA_CONFIG_FILE_PATH,
   PACKAGE_ROOT_PATH,
   REPO_ROOT_PATH,
@@ -93,7 +98,7 @@ export const checkState = ({ code, stderr }: ShellString) => {
   }
 };
 
-export const isFeatureBranch = (branch: string) => {
+export const checkFeatureBranch = (branch: string) => {
   const results = FEATURE_BRANCH_REGEX.exec(branch);
 
   if (!results) {
@@ -101,6 +106,26 @@ export const isFeatureBranch = (branch: string) => {
   }
 
   return results[1];
+};
+
+export const checkGitFlowReleaseBranch = (branch: string) => {
+  const results = GITFLOW_RELEASE_BRANCH_REGEX.exec(branch);
+
+  if (!results) {
+    throw new Error(`'${branch}' is not a GitFlow release branch`);
+  }
+
+  return results[1];
+};
+
+export const checkGfGhBaseReleaseBranch = (branch: string) => {
+  const results = GH_GF_BASE_RELEASE_BRANCH_REGEX.exec(branch);
+
+  if (!results) {
+    throw new Error(`'${branch}' is not a GitHub-GitFlow base release candidate branch`);
+  }
+
+  return results[0];
 };
 
 export const getFeatureIdFromBranchName = async (packagePath: string) => {
@@ -111,7 +136,7 @@ export const getFeatureIdFromBranchName = async (packagePath: string) => {
     throw new Error('Current branch not available');
   }
 
-  const featureId = isFeatureBranch(current);
+  const featureId = checkFeatureBranch(current);
 
   printInfo(`Feature ID for branch '${current}' is ${featureId}`, packageName);
   return featureId;
@@ -390,4 +415,42 @@ export const getMonorepoPackages = async () => {
   return workspaces
     .map(ws => getMonorepoWorkspacePackages(`${REPO_ROOT_PATH}/${ws}`))
     .reduce((acc, val) => acc.concat(val), []);
+};
+
+export const checkIsGitFlowRepository = () => {
+  try {
+    const anError = new Error();
+    anError.name = 'IsGitFlowError';
+
+    if (!isRemoteBranchExist(base)) {
+      anError.message = `Base branch '${base}' doesn't exist remotely`;
+      throw anError;
+    }
+
+    if (!isRemoteBranchExist(development)) {
+      anError.message = `Development branch '${development}' doesn't exist remotely`;
+      throw anError;
+    }
+
+    if (!isAncestor(base, development)) {
+      anError.message = `'${base}' is supposed to be an ancestor of '${development}'`;
+      throw anError;
+    }
+  } catch (error) {
+    if (error.name === 'IsGitFlowError') {
+      throw new Error(`This repository doesn't appear to follow GitFlow: ${error.message}`);
+    } else {
+      throw new Error(`Unexpected error whilst detecting if this repository is a GitFlow one: ${error.message}`);
+    }
+  }
+};
+
+export const removeBranch = async (branch: string, where: 'LOCAL' | 'REMOTE' | 'BOTH' = 'LOCAL') => {
+  if (where === 'LOCAL' || where === 'BOTH') {
+    await deleteLocalBranch(branch);
+  }
+
+  if (where === 'REMOTE' || where === 'BOTH') {
+    await deleteRemoteRef(branch);
+  }
 };

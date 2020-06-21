@@ -6,6 +6,11 @@ export interface BranchNames {
   hotfix: string;
   development: string;
   bugfix: string;
+  release: string;
+}
+
+export interface Release {
+  preset: string;
 }
 
 export const gitMethodologies = ['GitFlow', 'GitHubFlow'] as const;
@@ -26,6 +31,7 @@ export interface CIPilotFileConfig {
   gitBranchSeparator: BranchSeparator;
   tagSeparator: TagSeparator;
   packageManager: PackageManager;
+  release: Release;
 }
 
 export interface NextVersionInfo {

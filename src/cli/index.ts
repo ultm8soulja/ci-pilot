@@ -7,7 +7,7 @@ import { printErrorText } from '../util';
 import { publish, Stage as PublishStage } from './publish';
 import { helper, Helper } from './helper';
 // import { version, Stage as VersionStage } from './version';
-import { release, Step as ReleaseStep } from './release';
+import { releaseGitHubGitFlow, Step as ReleaseStep } from './release-gh-gf';
 
 (async (): Promise<void> => {
   const {
@@ -29,8 +29,8 @@ import { release, Step as ReleaseStep } from './release';
     // case 'version':
     //   version(subcommand as VersionStage);
     //   break;
-    case 'release':
-      release(subcommand as ReleaseStep);
+    case 'release-gh-gf':
+      releaseGitHubGitFlow(subcommand as ReleaseStep);
       break;
     default:
       printErrorText('Unrecognised command, exiting...');
