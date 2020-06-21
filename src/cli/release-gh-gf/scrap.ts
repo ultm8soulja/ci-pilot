@@ -13,15 +13,7 @@ const checkoutReleaseBranch = async () => {
   try {
     const currentBranchName = await getCurrentBranchName();
 
-    try {
-      checkGfGhBaseReleaseBranch(currentBranchName);
-
-      throw new Error('Must checkout the actual release branch, not the release candidate base branch');
-    } catch (error) {
-      checkGitFlowReleaseBranch(currentBranchName);
-      checkGitFlowReleaseBranch(currentBranchName);
-    }
-
+    checkGitFlowReleaseBranch(currentBranchName);
     await checkoutBranch(currentBranchName);
   } catch (error) {
     throw new Error(`Error checking out the release branch to be scrapped - ${error.message}`);
