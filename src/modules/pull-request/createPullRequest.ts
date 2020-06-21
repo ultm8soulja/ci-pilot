@@ -43,6 +43,7 @@ export const createPullRequest = async (rcBranch: string, newVersion: string) =>
         base: rcBranch,
         body: `${body} \n\n\n*created by ci-pilot*`,
         draft: true,
+        labels: ['release'],
       },
     });
   } catch (err) {
