@@ -25,6 +25,8 @@ import {
   getRefHash,
   isAncestor,
   isRemoteBranchExist,
+  deleteLocalBranch,
+  deleteRemoteRef,
 } from '../modules';
 
 import { printInfoText, printErrorText, printSuccessText, printWarningText } from './console';
@@ -440,5 +442,15 @@ export const checkIsGitFlowRepository = () => {
     } else {
       throw new Error(`Unexpected error whilst detecting if this repository is a GitFlow one: ${error.message}`);
     }
+  }
+};
+
+export const removeBranch = async (branch: string, where: 'LOCAL' | 'REMOTE' | 'BOTH' = 'LOCAL') => {
+  if (where === 'LOCAL' || where === 'BOTH') {
+    await deleteLocalBranch(branch);
+  }
+
+  if (where === 'REMOTE' || where === 'BOTH') {
+    await deleteRemoteRef(branch);
   }
 };

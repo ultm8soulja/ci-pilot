@@ -1,7 +1,7 @@
 import { printSuccessText, checkGitFlowReleaseBranch } from '../../util';
 import { getCurrentBranchName, pushToOrigin, createTag } from '../../modules';
 
-const STAGE_TAG_PREFIX = 'rc-';
+import { STAGE_TAG_PREFIX } from './constants';
 
 export const stageReleaseCandidateHead = async () => {
   const currentBranchName = await getCurrentBranchName();

@@ -14,8 +14,12 @@ import {
   getNextVersion,
   deleteLocalBranch,
   createPullRequest,
+  getRefHash,
 } from '../../modules';
 import config from '../../config';
+
+import { RELEASE_RELIC_FILENAME, BASE_BRANCH_COMMIT_MSG } from './constants';
+import { ReleaseRelic } from './models';
 
 const bump = promisify<Options, Callback.Recommendation>(conventionalRecommendedBump);
 
@@ -26,10 +30,6 @@ const {
   release: { preset },
 } = config;
 
-const relicName = 'RELEASE';
-
-export const BASE_BRANCH_COMMIT_MSG = 'chore(release): => Base branch reference';
-
 export const cutRelease = async () => {
   try {
     const currentBranchName = await getCurrentBranchName();
@@ -38,6 +38,7 @@ export const cutRelease = async () => {
       await checkoutBranch(branchNames.development);
     }
 
+    const developmentBranchShasum = await getRefHash(currentBranchName);
     const releaseBaseBranchName = `rc-${new Date().getTime()}-do-not-use`;
 
     await createBranch(releaseBaseBranchName);
@@ -61,10 +62,16 @@ export const cutRelease = async () => {
 
     await createBranch(releaseBranchName);
 
-    writeFileSync(relicName, releaseBaseBranchName);
+    const relicData: ReleaseRelic = {
+      base: developmentBranchShasum,
+      releaseBase: releaseBaseBranchName,
+      release: releaseBranchName,
+    };
 
-    await stageFiles([relicName]);
-    await commit(BASE_BRANCH_COMMIT_MSG, [relicName]);
+    writeFileSync(RELEASE_RELIC_FILENAME, JSON.stringify(relicData, undefined, 2));
+
+    await stageFiles([RELEASE_RELIC_FILENAME]);
+    await commit(BASE_BRANCH_COMMIT_MSG, [RELEASE_RELIC_FILENAME]);
 
     await pushToOrigin(releaseBranchName);
 

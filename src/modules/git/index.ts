@@ -202,3 +202,8 @@ export const deleteLocalBranch = async (branch: string) => {
   const git = simpleGit();
   await git.deleteLocalBranch(branch, true);
 };
+
+export const deleteRemoteRef = async (ref: string) => {
+  const git = simpleGit();
+  await git.push('origin', ref, { '--delete': null });
+};
