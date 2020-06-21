@@ -46,32 +46,54 @@ yarn add -D ci-pilot
 
 ## Commands
 
-1. `ci-pilot publish feature`
-1. `ci-pilot release-gh-gf cut`
-1. `ci-pilot release-gh-gf stage`
-1. `ci-pilot release-gh-gf finish`
+Supported commands:
+1. `publish`
+1. `release-gh-gf`
+1. `helpers`
 
-## Ethos
+### Publish
+`ci-pilot publish [stage]`
 
-We have different recommendations on how to use CI Pilot based on the progress of the code change through your software release pipeline - see details below.
-
-### Developing features
-
-#### Publish your package
-
-Publish packages on features you're developing by adding the following command as a step in your CI pipeline:
+#### Publish a feature branch
 ```bash
 ci-pilot publish feature
 ```
 
-Note: We don't recommend committing feature branch versions bumps to Git, as the pre-release alpha versions would eventually be merged into base or development branches which is wrong. Instead we believe that Git tags are sufficient to mark the origin of built packages that are uploaded to your package registries.
+### Release GitHub-GitFlow
+`ci-pilot release-gh-fg [step]`
 
-Our strategy:
-1. Version the package(s) in the repository locally
-1. Publish the packages (containing the `package.json` file for built assets contain the alpha feature version)
-1. Wipe away the version changes in the Git working tree
+#### Cut a new release
+```bash
+ci-pilot release-gh-gf cut
+```
 
-If you're working in a mono-repo then the above command will detect that and by default publish all workspace packages. If you wish to only publish only one of the packages in the mono-repo then you should include the `--package-only` flag otherwise the command will fail, as it's not our recommendation.
+#### Stage a release via a Git tag
+```bash
+ci-pilot release-gh-gf stage
+```
+
+#### Finish a release
+```bash
+ci-pilot release-gh-gf finish
+```
+
+#### Scrap a release
+```bash
+ci-pilot release-gh-gf scrap
+```
+
+### Helpers
+`ci-pilot helpers [helper]`
+
+#### Cut a new release
+```bash
+ci-pilot helpers package-name
+```
+
+#### Stage a release via a Git tag
+```bash
+ci-pilot helpers is-repo-gitflow
+```
 
 ## Configure
 
@@ -121,3 +143,25 @@ Configuration Options:
 - `tagSeparator`: Options: **#** | **£** | **$**, defaults to **#**
 
 _Note: CI Pilot uses your package manager of choice under the hood, npm or yarn. Ensuring that your CI pipeline is configured correctly for npm or yarn remains your responsibility and is out of scope for CI Pilot._ 
+
+## Ethos
+
+We have different recommendations on how to use CI Pilot based on the progress of the code change through your software release pipeline - see details below.
+
+### Developing features
+
+#### Publish your feature package
+
+Publish packages on features you're developing by adding the following command as a step in your CI pipeline:
+```bash
+ci-pilot publish feature
+```
+
+Note: We don't recommend committing feature branch versions bumps to Git, as the pre-release alpha versions would eventually be merged into base or development branches which is wrong. Instead we believe that Git tags are sufficient to mark the origin of built packages that are uploaded to your package registries.
+
+Our strategy:
+1. Version the package(s) in the repository locally
+1. Publish the packages (containing the `package.json` file for built assets contain the alpha feature version)
+1. Wipe away the version changes in the Git working tree
+
+If you're working in a mono-repo then the above command will detect that and by default publish all workspace packages. If you wish to only publish only one of the packages in the mono-repo then you should include the `--package-only` flag otherwise the command will fail, as it's not our recommendation.
