@@ -66,6 +66,7 @@ export const cutRelease = async () => {
       base: developmentBranchShasum,
       releaseBase: releaseBaseBranchName,
       release: releaseBranchName,
+      predictedVersion: nextVersion,
     };
 
     writeFileSync(RELEASE_RELIC_FILENAME, JSON.stringify(relicData, undefined, 2));

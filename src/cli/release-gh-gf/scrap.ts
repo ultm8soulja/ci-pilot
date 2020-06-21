@@ -1,11 +1,8 @@
-import { readFileSync } from 'fs';
-
-import { printSuccessText, checkGfGhBaseReleaseBranch, checkGitFlowReleaseBranch, removeBranch } from '../../util';
+import { printSuccessText, checkGitFlowReleaseBranch, removeBranch } from '../../util';
 import { getCurrentBranchName, checkoutBranch, fetchBranch } from '../../modules';
 import config from '../../config';
 
-import { RELEASE_RELIC_FILENAME } from './constants';
-import { ReleaseRelic } from './models';
+import { retrieveReleaseRelicData } from './helpers';
 
 const { branchNames } = config;
 
@@ -17,15 +14,6 @@ const checkoutReleaseBranch = async () => {
     await checkoutBranch(currentBranchName);
   } catch (error) {
     throw new Error(`Error checking out the release branch to be scrapped - ${error.message}`);
-  }
-};
-
-const retrieveReleaseRelicData = (): ReleaseRelic => {
-  try {
-    const relicStr = readFileSync(RELEASE_RELIC_FILENAME).toString();
-    return JSON.parse(relicStr);
-  } catch (error) {
-    throw new Error(`Error retrieving the release relic - ${error.message}`);
   }
 };
 

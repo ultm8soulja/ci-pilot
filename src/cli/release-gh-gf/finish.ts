@@ -8,10 +8,16 @@ import {
   moveTag,
   getMostRecentMatchingTag,
   deleteLocalBranch,
+  getRefHash,
 } from '../../modules';
 import config from '../../config';
 
+import {} from './scrap';
+import { retrieveReleaseRelicData } from './helpers';
+
 const { branchNames, REPO_ROOT_PATH } = config;
+
+const SEMVER_PATTERN = '*[0-9].*[0-9].*[0-9]';
 
 export const finishRelease = async () => {
   // Ensure the current branch is a release base branch
@@ -22,18 +28,27 @@ export const finishRelease = async () => {
     // standardVersion({ dryRun: true, preset: 'angular' });
   }
 
+  const { base } = retrieveReleaseRelicData();
+  if ((await getRefHash(base)) !== (await getRefHash(releaseBaseBranchName))) {
+    throw new Error(`Expected '${releaseBaseBranchName}' to differ from '${branchNames.development}'`);
+  }
+
   // Ensure we're still on release base branch
   await checkoutBranch(releaseBaseBranchName);
 
-  // Check version from package.json and ensure a git tag of the same name exists locally
+  // Check for a git tag on the head of the branch and ensure it matches the version in package.json
   const version = getPackageVersion(REPO_ROOT_PATH);
-  const tagPattern = `*${version}`;
 
   let tag: string;
-  if (!isGitHeadTagged(tagPattern) || !(tag = (await getMostRecentMatchingTag(tagPattern)) as string)) {
-    throw new Error(
-      `Expected Git tag for next version '${version}' not found on the head of '${releaseBaseBranchName}'`
-    );
+  const versionError = new Error(
+    `Expected Git tag for next version '${version}' not found on the head of '${releaseBaseBranchName}'`
+  );
+  if (!isGitHeadTagged(SEMVER_PATTERN) || !(tag = (await getMostRecentMatchingTag(version)) as string)) {
+    throw versionError;
+  }
+
+  if ((await getRefHash(tag)) !== (await getRefHash(releaseBaseBranchName))) {
+    throw versionError;
   }
 
   // Checkout master branch and pull latest version
@@ -45,7 +60,7 @@ export const finishRelease = async () => {
 
   // Move tag from head of rc to master head, and push to origin
   await moveTag(tag, branchNames.base);
-  await pushToOrigin(tag);
+  await pushToOrigin(tag, true);
 
   // Checkout develop branch and pull latest version
   await checkoutBranch(branchNames.development);

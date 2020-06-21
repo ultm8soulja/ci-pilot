@@ -101,9 +101,9 @@ export const createTag = async (tag: string) => {
   return name;
 };
 
-export const pushToOrigin = async (ref: string) => {
+export const pushToOrigin = async (ref: string, force = false) => {
   const git = simpleGit();
-  await git.push('origin', ref);
+  await git.push('origin', ref, force ? { '--force': null } : undefined);
 };
 
 export const reset = async (mode: 'soft' | 'mixed' | 'hard' | 'merge' | 'keep') => {
