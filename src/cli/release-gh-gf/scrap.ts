@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 
 import { printSuccessText, checkGfGhBaseReleaseBranch, checkGitFlowReleaseBranch, removeBranch } from '../../util';
-import { getCurrentBranchName, checkoutBranch } from '../../modules';
+import { getCurrentBranchName, checkoutBranch, fetchBranch } from '../../modules';
 import config from '../../config';
 
 import { RELEASE_RELIC_FILENAME } from './constants';
@@ -45,13 +45,15 @@ export const scrapRelease = async () => {
 
     const { release, releaseBase } = retrieveReleaseRelicData();
 
+    await fetchBranch(releaseBase);
+
     // TODO: find and remove and tags on the release branch
 
     await checkoutBranch(branchNames.development);
 
-    await removeBranch(release);
+    await removeBranch(release, 'BOTH');
 
-    await removeBranch(releaseBase);
+    await removeBranch(releaseBase, 'BOTH');
 
     printSuccessText('Operation complete');
   } catch (error) {
