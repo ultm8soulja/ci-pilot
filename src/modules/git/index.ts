@@ -101,9 +101,13 @@ export const createTag = async (tag: string) => {
   return name;
 };
 
-export const pushToOrigin = async (ref: string, force = false) => {
+export const pushToOrigin = async (ref: string, force = false, verify = false) => {
   const git = simpleGit();
-  await git.push('origin', ref, force ? { '--force': null } : undefined);
+  const parts = ['push', 'origin', ref];
+  if (force) parts.push('--force');
+  if (!verify) parts.push('--no-verify');
+
+  await git.raw(parts);
 };
 
 export const reset = async (mode: 'soft' | 'mixed' | 'hard' | 'merge' | 'keep') => {
@@ -157,6 +161,17 @@ export const isAncestor = (refOne: string, refTwo: string) => {
 export const isGitHeadTagged = (tagPattern: string) => {
   const { code } = exec(`git describe --tags --exact-match --match "${tagPattern}" HEAD`, { silent: true });
   return code !== 128;
+};
+
+export const getMatchingTagsAtHead = async (pattern = '*') => {
+  const git = simpleGit();
+  const tags = await git.raw(['tag', '--points-at', 'HEAD', '--list', pattern]);
+
+  if (!tags || tags.trim() === '') {
+    printInfoText(`No matching tags found on HEAD`);
+    return;
+  }
+  return tags.split('\n').filter(line => line.trim().length > 0);
 };
 
 export const getDiff = async (refOne: string, refTwo = 'HEAD') => {
