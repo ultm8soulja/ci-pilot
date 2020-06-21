@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/ultm8soulja/ci-pilot/compare/v1.4.0...v1.5.0) (2020-06-21)
+
+
+### Features
+
+* Release GitHub GitFlow CLI command ([#14](https://github.com/ultm8soulja/ci-pilot/issues/14)) ([0dedf2e](https://github.com/ultm8soulja/ci-pilot/commit/0dedf2e36f4b686720378c8fe90c311c7bd8182a))
+
 # [1.4.0](https://github.com/ultm8soulja/ci-pilot/compare/v1.3.0...v1.4.0) (2020-06-12)
 
 
