@@ -210,5 +210,5 @@ export const deleteRemoteRef = async (ref: string) => {
 
 export const fetchBranch = async (branch: string) => {
   const git = simpleGit();
-  await git.fetch('origin', branch);
+  await git.raw(['fetch', 'origin', `${branch}:${branch}`]);
 };
