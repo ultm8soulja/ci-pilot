@@ -1,5 +1,8 @@
 {
   "gitMethodology": "GitHubFlow",
   "gitBranchSeparator": "/",
-  "tagSeparator": "#"
+  "tagSeparator": "#",
+  "branchNames": {
+    "base": "base"
+  }
 }
