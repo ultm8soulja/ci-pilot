@@ -7,10 +7,11 @@ import config from '../../config';
 import { stageReleaseCandidateHead } from './stage';
 import { finishRelease } from './finish';
 import { cutRelease } from './cut';
+import { scrapRelease } from './scrap';
 
 const { DEV_MODE } = config;
 
-const steps = ['cut', 'stage', 'finish'] as const;
+const steps = ['cut', 'stage', 'finish', 'scrap'] as const;
 export type Step = typeof steps[number];
 
 export const releaseGitHubGitFlow = async (step: Step) => {
@@ -56,6 +57,9 @@ export const releaseGitHubGitFlow = async (step: Step) => {
         break;
       case 'finish':
         await finishRelease();
+        break;
+      case 'scrap':
+        await scrapRelease();
         break;
     }
   } catch (error) {
