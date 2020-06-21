@@ -26,7 +26,7 @@ const checkoutReleaseBranch = async () => {
       await checkoutBranch(currentBranchName);
     }
   } catch (error) {
-    throw new Error(`Problem checking out the release branch to be scrapped: ${error.message}`);
+    throw new Error(`Error checking out the release branch to be scrapped - ${error.message}`);
   }
 };
 
@@ -35,7 +35,7 @@ const retrieveReleaseRelicData = (): ReleaseRelic => {
     const relicStr = readFileSync(RELEASE_RELIC_FILENAME).toString();
     return JSON.parse(relicStr);
   } catch (error) {
-    throw new Error(`Problem retrieving the release relic: ${error.message}`);
+    throw new Error(`Error retrieving the release relic - ${error.message}`);
   }
 };
 
