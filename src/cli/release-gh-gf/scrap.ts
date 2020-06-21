@@ -12,19 +12,17 @@ const { branchNames } = config;
 const checkoutReleaseBranch = async () => {
   try {
     const currentBranchName = await getCurrentBranchName();
-    let branchType: 'base' | 'release';
 
     try {
       checkGfGhBaseReleaseBranch(currentBranchName);
-      branchType = 'base';
+
+      throw new Error('Must checkout the actual release branch, not the release candidate base branch');
     } catch (error) {
       checkGitFlowReleaseBranch(currentBranchName);
-      branchType = 'release';
+      checkGitFlowReleaseBranch(currentBranchName);
     }
 
-    if (branchType === 'base') {
-      await checkoutBranch(currentBranchName);
-    }
+    await checkoutBranch(currentBranchName);
   } catch (error) {
     throw new Error(`Error checking out the release branch to be scrapped - ${error.message}`);
   }
