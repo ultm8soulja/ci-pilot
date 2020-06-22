@@ -165,3 +165,6 @@ Our strategy:
 1. Wipe away the version changes in the Git working tree
 
 If you're working in a mono-repo then the above command will detect that and by default publish all workspace packages. If you wish to only publish only one of the packages in the mono-repo then you should include the `--package-only` flag otherwise the command will fail, as it's not our recommendation.
+
+# License
+[MIT](https://github.com/ultm8soulja/ci-pilot/blob/master/LICENSE)
