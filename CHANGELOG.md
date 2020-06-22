@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/ultm8soulja/ci-pilot/compare/v1.5.1...v1.5.2) (2020-06-22)
+
+
+### Bug Fixes
+
+* Release-gh-gf Finish command improvements ([b088778](https://github.com/ultm8soulja/ci-pilot/commit/b088778d5ace1db18c1ebdda521431161e4a50da))
+
 ## [1.5.1](https://github.com/ultm8soulja/ci-pilot/compare/v1.5.0...v1.5.1) (2020-06-21)
 
 
