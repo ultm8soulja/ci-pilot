@@ -37,7 +37,7 @@ export const finishRelease = async (autoBump: boolean, mergeMsgSkipCi = false) =
 
     if (autoBump) {
       try {
-        await standardVersion({ preset, message: BUMP_COMMIT_MESSAGE, noVerify: true, tagPrefix });
+        await standardVersion({ preset, releaseCommitMessageFormat: BUMP_COMMIT_MESSAGE, noVerify: true, tagPrefix });
       } catch (error) {
         throw new Error(`standard-version failed: ${error.message}`);
       }

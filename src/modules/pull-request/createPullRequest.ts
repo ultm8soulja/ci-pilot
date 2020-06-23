@@ -38,7 +38,7 @@ export const createPullRequest = async (rcBranch: string, newVersion: string) =>
     await github.post(`repos/${remote}/pulls`, {
       token: GITHUB_TOKEN,
       body: {
-        title: `chore(release): v${newVersion}`,
+        title: `chore(release): => v${newVersion}`,
         head: currentBranch,
         base: rcBranch,
         body: `${body} \n\n\n*created by ci-pilot*`,
