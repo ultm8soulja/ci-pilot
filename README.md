@@ -19,6 +19,14 @@
   <a href="#contributors-">
     <img src="https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square" style="max-width:100%;">
   </a>
+
+  <a href="https://www.npmjs.com/package/ci-pilot">
+    <img src="https://img.shields.io/npm/v/ci-pilot.svg" style="max-width:100%;">
+  </a>
+
+  <a href="https://conventionalcommits.org">
+    <img src="https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg" style="max-width:100%;">
+  </a>
 </p>
 
 ## Overview
@@ -80,6 +88,10 @@ ci-pilot release-gh-gf stage
 ```bash
 ci-pilot release-gh-gf finish
 ```
+
+Additional command-line flags:
+- `--auto-bump-change-log` or `-a`: This flag when specified will use [standard-version](https://github.com/conventional-changelog/standard-version) under the hood to generate the next release version based on the Conventional Commits preset chosen, bump the `package.json` version, generate or update the change log, and Git tag the commit with the version.
+- `--merge-msg-skip-ci` or `-m`: This flag will suffix GitFlow merge commits with `[skip ci]`, a common convention used to avoid additional jobs being triggered in your CI pipeline.
 
 #### Scrap a release
 ```bash
