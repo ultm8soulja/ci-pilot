@@ -1,14 +1,7 @@
 import includes from 'lodash/includes';
 import { ParsedArgs } from 'minimist';
 
-import {
-  printInfoText,
-  printErrorText,
-  startup,
-  isMonorepo,
-  checkIsGitFlowRepository,
-  detectConventionalCommits,
-} from '../../util';
+import { printInfoText, printErrorText, startup, isMonorepo, checkIsGitFlowRepository } from '../../util';
 import { isGitRepository, isWorkingDirectoryClean } from '../../modules';
 import config from '../../config';
 
@@ -60,13 +53,6 @@ export const releaseGitHubGitFlow = async (step: Step, cliArgs: ParsedArgs) => {
 
   try {
     checkIsGitFlowRepository();
-
-    if (!(await detectConventionalCommits())) {
-      printErrorText(
-        "The commit messages in this repository don't appear to follow Conventional Commits - can't proceed as this is mandatory"
-      );
-      process.exit(1);
-    }
 
     switch (step) {
       case 'cut':
