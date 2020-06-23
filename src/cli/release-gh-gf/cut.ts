@@ -3,7 +3,7 @@ import { promisify } from 'util';
 
 import conventionalRecommendedBump, { Options, Callback } from 'conventional-recommended-bump';
 
-import { printSuccessText, printInfoText, getPackageVersion } from '../../util';
+import { printSuccessText, printInfoText, getPackageVersion, detectConventionalCommits } from '../../util';
 import {
   getCurrentBranchName,
   checkoutBranch,
@@ -32,6 +32,12 @@ const {
 
 export const cutRelease = async () => {
   try {
+    if (!(await detectConventionalCommits())) {
+      throw new Error(
+        "The commit messages in this repository don't appear to follow Conventional Commits - can't proceed as this is mandatory"
+      );
+    }
+
     const currentBranchName = await getCurrentBranchName();
 
     if (currentBranchName !== branchNames.development) {

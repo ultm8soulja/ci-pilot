@@ -1,13 +1,7 @@
 import includes from 'lodash/includes';
+import { ParsedArgs } from 'minimist';
 
-import {
-  printInfoText,
-  printErrorText,
-  startup,
-  isMonorepo,
-  checkIsGitFlowRepository,
-  detectConventionalCommits,
-} from '../../util';
+import { printInfoText, printErrorText, startup, isMonorepo, checkIsGitFlowRepository } from '../../util';
 import { isGitRepository, isWorkingDirectoryClean } from '../../modules';
 import config from '../../config';
 
@@ -21,7 +15,7 @@ const { DEV_MODE, gitMethodology } = config;
 const steps = ['cut', 'stage', 'finish', 'scrap'] as const;
 export type Step = typeof steps[number];
 
-export const releaseGitHubGitFlow = async (step: Step) => {
+export const releaseGitHubGitFlow = async (step: Step, cliArgs: ParsedArgs) => {
   startup();
 
   printInfoText(`> ci-pilot release-gh-gf [step]`);
@@ -60,13 +54,6 @@ export const releaseGitHubGitFlow = async (step: Step) => {
   try {
     checkIsGitFlowRepository();
 
-    if (!(await detectConventionalCommits())) {
-      printErrorText(
-        "The commit messages in this repository don't appear to follow Conventional Commits - can't proceed as this is mandatory"
-      );
-      process.exit(1);
-    }
-
     switch (step) {
       case 'cut':
         await cutRelease();
@@ -75,7 +62,7 @@ export const releaseGitHubGitFlow = async (step: Step) => {
         await stageReleaseCandidateHead();
         break;
       case 'finish':
-        await finishRelease();
+        await finishRelease(cliArgs.a || cliArgs['auto-bump-change-log'], cliArgs.m || cliArgs['merge-msg-skip-ci']);
         break;
       case 'scrap':
         await scrapRelease();
