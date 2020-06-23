@@ -11,7 +11,6 @@ import {
   merge,
   pushToOrigin,
   moveTag,
-  deleteLocalBranch,
   getRefHash,
   getMatchingTagsAtHead,
 } from '../../modules';

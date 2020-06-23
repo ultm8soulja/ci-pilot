@@ -227,3 +227,20 @@ export const fetchBranch = async (branch: string) => {
   const git = simpleGit();
   await git.raw(['fetch', 'origin', `${branch}:${branch}`]);
 };
+
+export const getCommitMessagesFromRefToHead = async (ref: string) => {
+  try {
+    const git = simpleGit();
+    const messages = await git.raw(['log', '--pretty=format:%s', '--abbrev-commit', `${ref}..`]);
+
+    if (!messages || messages.trim() === '') {
+      return;
+    }
+    return messages.split('\n').filter(line => line.trim().length > 0);
+  } catch (error) {
+    if ((error.message as string).includes('unknown revision or path not in the working tree')) {
+      throw new Error(`'${ref}' not found on git tree`);
+    }
+    throw error;
+  }
+};
