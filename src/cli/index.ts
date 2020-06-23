@@ -10,9 +10,10 @@ import { helper, Helper } from './helper';
 import { releaseGitHubGitFlow, Step as ReleaseStep } from './release-gh-gf';
 
 (async (): Promise<void> => {
+  const cliArgs = minimist(process.argv.slice(2));
   const {
     _: [command, subcommand],
-  } = minimist(process.argv.slice(2));
+  } = cliArgs;
 
   if (!command) {
     printErrorText('No command chosen, exiting...');
@@ -30,7 +31,7 @@ import { releaseGitHubGitFlow, Step as ReleaseStep } from './release-gh-gf';
     //   version(subcommand as VersionStage);
     //   break;
     case 'release-gh-gf':
-      releaseGitHubGitFlow(subcommand as ReleaseStep);
+      releaseGitHubGitFlow(subcommand as ReleaseStep, cliArgs);
       break;
     default:
       printErrorText('Unrecognised command, exiting...');

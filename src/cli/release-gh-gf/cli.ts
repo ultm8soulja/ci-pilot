@@ -1,4 +1,5 @@
 import includes from 'lodash/includes';
+import { ParsedArgs } from 'minimist';
 
 import {
   printInfoText,
@@ -21,7 +22,7 @@ const { DEV_MODE, gitMethodology } = config;
 const steps = ['cut', 'stage', 'finish', 'scrap'] as const;
 export type Step = typeof steps[number];
 
-export const releaseGitHubGitFlow = async (step: Step) => {
+export const releaseGitHubGitFlow = async (step: Step, cliArgs: ParsedArgs) => {
   startup();
 
   printInfoText(`> ci-pilot release-gh-gf [step]`);
@@ -75,7 +76,7 @@ export const releaseGitHubGitFlow = async (step: Step) => {
         await stageReleaseCandidateHead();
         break;
       case 'finish':
-        await finishRelease();
+        await finishRelease(cliArgs.a || cliArgs['auto-bump-change-log']);
         break;
       case 'scrap':
         await scrapRelease();

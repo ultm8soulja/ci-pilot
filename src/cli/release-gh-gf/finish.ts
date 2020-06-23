@@ -1,3 +1,5 @@
+import standardVersion from 'standard-version';
+
 import {
   checkGfGhBaseReleaseBranch,
   getPackageVersion,
@@ -18,18 +20,28 @@ import config from '../../config';
 
 import { retrieveReleaseRelicData } from './helpers';
 
-const { branchNames, REPO_ROOT_PATH } = config;
+const {
+  branchNames,
+  REPO_ROOT_PATH,
+  release: { preset, tagPrefix },
+} = config;
 
 const SEMVER_PATTERN = '*[0-9].*[0-9].*[0-9]';
+const BUMP_COMMIT_MESSAGE = 'chore(release) => %s';
 
-export const finishRelease = async () => {
+export const finishRelease = async (autoBump: boolean) => {
   try {
     // Ensure the current branch is a release base branch
     const releaseBaseBranchName = checkGfGhBaseReleaseBranch(await getCurrentBranchName());
 
-    // TODO: Check if the last commit on the base branch was from the GitFlow release branch
-    if (false) {
-      // standardVersion({ dryRun: true, preset: 'angular' });
+    // TODO: Check if the last commit on the base branch was from the GitFlow release branch???
+
+    if (autoBump) {
+      try {
+        await standardVersion({ preset, message: BUMP_COMMIT_MESSAGE, noVerify: true, tagPrefix });
+      } catch (error) {
+        throw new Error(`standard-version failed: ${error.message}`);
+      }
     }
 
     const { base } = retrieveReleaseRelicData();

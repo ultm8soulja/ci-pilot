@@ -21,6 +21,7 @@ export const defaultBranches: BranchNames = {
 
 export const defaultRelease: Release = {
   preset: 'angular',
+  tagPrefix: 'v',
 };
 
 export const validateAndProcessFileConfig = (config: CIPilotFileConfig) => {
