@@ -1,6 +1,6 @@
 {
   "name": "ci-pilot",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Automate your CI pipeline with ease - you'll find binaries and functions that help you simplify the process",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -63,9 +63,9 @@
     "@types/jest": "^25.1.4",
     "@types/lodash": "^4.14.150",
     "@types/minimist": "^1.2.0",
-    "@types/node": "^13.7.4",
     "@types/semver": "^7.1.0",
     "@types/shelljs": "^0.8.7",
+    "@types/standard-version": "^7.0.0",
     "@typescript-eslint/eslint-plugin": "^2.19.0",
     "@typescript-eslint/parser": "^2.19.0",
     "chance": "^1.1.4",
@@ -102,6 +102,7 @@
     "minimist": "^1.2.5",
     "semver": "^7.3.2",
     "shelljs": "^0.8.4",
-    "simple-git": "^2.3.0"
+    "simple-git": "^2.3.0",
+    "standard-version": "^8.0.0"
   }
 }

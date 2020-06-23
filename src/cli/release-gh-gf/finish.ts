@@ -1,9 +1,12 @@
+import standardVersion from 'standard-version';
+
 import {
   checkGfGhBaseReleaseBranch,
   getPackageVersion,
   printSuccessText,
   printInfoText,
   removeBranch,
+  printWarningText,
 } from '../../util';
 import {
   getCurrentBranchName,
@@ -17,19 +20,31 @@ import {
 import config from '../../config';
 
 import { retrieveReleaseRelicData } from './helpers';
+import { BUMP_COMMIT_MESSAGE, SEMVER_PATTERN } from './constants';
 
-const { branchNames, REPO_ROOT_PATH } = config;
+const {
+  branchNames,
+  REPO_ROOT_PATH,
+  release: { preset, tagPrefix },
+} = config;
 
-const SEMVER_PATTERN = '*[0-9].*[0-9].*[0-9]';
-
-export const finishRelease = async () => {
+export const finishRelease = async (autoBump: boolean, mergeMsgSkipCi = false) => {
   try {
     // Ensure the current branch is a release base branch
     const releaseBaseBranchName = checkGfGhBaseReleaseBranch(await getCurrentBranchName());
 
-    // TODO: Check if the last commit on the base branch was from the GitFlow release branch
-    if (false) {
-      // standardVersion({ dryRun: true, preset: 'angular' });
+    // TODO: Check if the last commit on the base branch was from the GitFlow release branch???
+
+    if (autoBump) {
+      try {
+        await standardVersion({ preset, releaseCommitMessageFormat: BUMP_COMMIT_MESSAGE, noVerify: true, tagPrefix });
+      } catch (error) {
+        throw new Error(`standard-version failed: ${error.message}`);
+      }
+    } else {
+      printWarningText(
+        `release-gh-gf has an optional --auto-bump-change-log (or -a) flag that will version and generate/update the change log on your behalf.\nYou've chosen not to use it thus we expect the head of ${releaseBaseBranchName} to be Git tagged with a version that matches that in 'package.json'.`
+      );
     }
 
     const { base } = retrieveReleaseRelicData();
@@ -66,7 +81,8 @@ export const finishRelease = async () => {
     // Checkout master branch and pull latest version
     await checkoutBranch(branchNames.base);
 
-    await merge(releaseBaseBranchName, branchNames.base);
+    const mergeCommitMsg = `chore(release): => Merged for ${tag} release${mergeMsgSkipCi ? ' [skip ci]' : ''}`;
+    await merge(releaseBaseBranchName, branchNames.base, mergeCommitMsg);
     await pushToOrigin(branchNames.base);
     printInfoText(`Merged '${releaseBaseBranchName}' into '${branchNames.base}' and pushed to remote`);
 
@@ -78,7 +94,7 @@ export const finishRelease = async () => {
     await checkoutBranch(branchNames.development);
 
     // Merge rc branch into develop and push to remote
-    await merge(releaseBaseBranchName, branchNames.development);
+    await merge(releaseBaseBranchName, branchNames.development, mergeCommitMsg);
     await pushToOrigin(branchNames.development);
     printInfoText(`Merged '${releaseBaseBranchName}' into '${branchNames.development}' and pushed to remote`);
 

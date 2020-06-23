@@ -11,6 +11,7 @@ export interface BranchNames {
 
 export interface Release {
   preset: string;
+  tagPrefix: string;
 }
 
 export const gitMethodologies = ['GitFlow', 'GitHubFlow'] as const;
