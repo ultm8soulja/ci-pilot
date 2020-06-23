@@ -61,7 +61,7 @@ yarn add -D ci-pilot
 Supported commands:
 1. `publish`
 1. `release-gh-gf`
-1. `helpers`
+1. `helper`
 
 ### Publish
 `ci-pilot publish [stage]`
@@ -98,17 +98,17 @@ Additional command-line flags:
 ci-pilot release-gh-gf scrap
 ```
 
-### Helpers
-`ci-pilot helpers [helper]`
+### Helper
+`ci-pilot helper [helper]`
 
 #### Cut a new release
 ```bash
-ci-pilot helpers package-name
+ci-pilot helper package-name
 ```
 
 #### Stage a release via a Git tag
 ```bash
-ci-pilot helpers is-repo-gitflow
+ci-pilot helper is-repo-gitflow
 ```
 
 ## Configure
