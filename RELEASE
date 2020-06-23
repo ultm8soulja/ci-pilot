@@ -1,0 +1,6 @@
+{
+  "base": "7af351dd036ceda4cc3c938ff1322da1afcc3b19",
+  "releaseBase": "rc-1592913798971-do-not-use",
+  "release": "release/1.7.0",
+  "predictedVersion": "1.7.0"
+}
