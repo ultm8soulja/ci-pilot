@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/ultm8soulja/ci-pilot/compare/v1.5.2...v1.6.0) (2020-06-23)
+
+
+### Features
+
+* Conventional Commits check when running release commands ([#19](https://github.com/ultm8soulja/ci-pilot/issues/19)) ([d135979](https://github.com/ultm8soulja/ci-pilot/commit/d135979b437e1dbe2baa3d0190c86c1a453e6e36))
+
 ## [1.5.2](https://github.com/ultm8soulja/ci-pilot/compare/v1.5.1...v1.5.2) (2020-06-22)
 
 
