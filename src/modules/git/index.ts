@@ -208,9 +208,14 @@ export const getRepositoryName = async () => {
   return repositoryName;
 };
 
-export const merge = async (from: string, to: string) => {
+export const merge = async (from: string, to: string, commitMsg?: string) => {
   const git = simpleGit();
-  await git.mergeFromTo(from, to, ['--no-ff', '--no-verify']);
+  await git.mergeFromTo(from, to, [
+    '--no-ff',
+    '--no-verify',
+    '-m',
+    commitMsg || `chore(release): => Merged from ${from}`,
+  ]);
 };
 
 export const deleteLocalBranch = async (branch: string) => {
