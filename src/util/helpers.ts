@@ -461,7 +461,7 @@ export const detectConventionalCommits = async (baseRef = base) => {
   const messages = await getCommitMessagesFromRefToHead(baseRef);
 
   if (!messages) {
-    throw new Error("Can't find commit messages to analyse");
+    throw new Error(`Can't find applicable commit messages to analyse between Git refs '${baseRef}' and HEAD`);
   }
 
   const outcome = conventionalCommitsDetector(messages);
