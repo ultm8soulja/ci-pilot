@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/ultm8soulja/ci-pilot/compare/v1.7.0...v1.7.1) (2020-06-23)
+
+
+### Bug Fixes
+
+* Make dependency-graph a dep ([a43389e](https://github.com/ultm8soulja/ci-pilot/commit/a43389e34d2b61c7f5a6940ecf99eb384fe892f2))
+
 # [1.7.0](https://github.com/ultm8soulja/ci-pilot/compare/v1.6.0...v1.7.0) (2020-06-23)
 
 
