@@ -457,7 +457,7 @@ export const removeBranch = async (branch: string, where: 'LOCAL' | 'REMOTE' | '
   }
 };
 
-export const detectConventionalCommits = async (baseRef = development) => {
+export const detectConventionalCommits = async (baseRef = base) => {
   const messages = await getCommitMessagesFromRefToHead(baseRef);
 
   if (!messages) {
