@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/ultm8soulja/ci-pilot/compare/v1.6.0...v1.7.0) (2020-06-23)
+
+
+### Features
+
+* Release GH GF integration with standard-version ([#25](https://github.com/ultm8soulja/ci-pilot/issues/25)) ([0866772](https://github.com/ultm8soulja/ci-pilot/commit/08667727ed39ca15675e0dd5b8b399e392c7ad73))
+
 # [1.6.0](https://github.com/ultm8soulja/ci-pilot/compare/v1.5.2...v1.6.0) (2020-06-23)
 
 
