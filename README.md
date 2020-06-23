@@ -116,7 +116,8 @@ Default (fully expanded):
     "bugfix": "bugfix"
   },
   "release": {
-    "preset": "angular"
+    "preset": "angular",
+    "tagPrefix": "v"
   },
   "gitBranchSeparator": "/",
   "tagSeparator": "#"
@@ -143,6 +144,8 @@ Configuration Options:
 - `branchNames.hotfix`: Optional, defaults to **hotfix**
 - `branchNames.development`: Optional, defaults to **develop**
 - `branchNames.bugfix`: Optional, defaults to **bugfix**
+- `release.preset`: Optional, defaults to **angular**
+- `release.tagPrefix`: Optional, defaults to **v**
 - `gitBranchSeparator`: Options: **/** | **-**, defaults to **/**
 - `tagSeparator`: Options: **#** | **£** | **$**, defaults to **#**
 
