@@ -11,7 +11,16 @@
       "avatar_url": "https://avatars1.githubusercontent.com/u/4200010?v=4",
       "profile": "https://github.com/ultm8soulja",
       "contributions": [
-        "code"
+        "ideas", "infrastructure", "code"
+      ]
+    },
+    {
+      "login": "jhalvorson",
+      "name": "Jamie Halvorson",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/10282220?v=4",
+      "profile": "https://halvorson.co.uk",
+      "contributions": [
+        "ideas", "code"
       ]
     }
   ],

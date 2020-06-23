@@ -169,9 +169,6 @@ Our strategy:
 
 If you're working in a mono-repo then the above command will detect that and by default publish all workspace packages. If you wish to only publish only one of the packages in the mono-repo then you should include the `--package-only` flag otherwise the command will fail, as it's not our recommendation.
 
-# License
-[MIT](https://github.com/ultm8soulja/ci-pilot/blob/master/LICENSE)
-
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
@@ -181,6 +178,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
+    <td align="center"><a href="https://halvorson.co.uk"><img src="https://avatars1.githubusercontent.com/u/10282220?v=4" width="100px;" alt=""/><br /><sub><b>Jamie Halvorson</b></sub></a><br /><a href="https://github.com/ultm8soulja/ci-pilot/commits?author=jhalvorson" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/ultm8soulja"><img src="https://avatars1.githubusercontent.com/u/4200010?v=4" width="100px;" alt=""/><br /><sub><b>Colin Agbabiaka</b></sub></a><br /><a href="https://github.com/ultm8soulja/ci-pilot/commits?author=ultm8soulja" title="Code">💻</a></td>
   </tr>
 </table>
@@ -190,3 +188,6 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## License
+[MIT](https://github.com/ultm8soulja/ci-pilot/blob/master/LICENSE)
