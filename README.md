@@ -1,7 +1,4 @@
 <div align="center">
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
   <h1>CI Pilot 👨🏿‍✈️</h1>
   <p>Automate your CI pipeline with ease - you'll find binaries and functions that help you simplify the process.</p>
 </div>
@@ -17,6 +14,10 @@
   
   <a href="https://circleci.com/gh/ultm8soulja/ci-pilot">
     <img src="https://circleci.com/gh/ultm8soulja/ci-pilot.svg?style=svg&circle-token=f8aa6102f5e3d526e5f2d0ae15b2a8cf7afc3e53" style="max-width:100%;">
+  </a>
+
+  <a href="#contributors-">
+    <img src="https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square" style="max-width:100%;">
   </a>
 </p>
 
@@ -178,8 +179,8 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://halvorson.co.uk"><img src="https://avatars1.githubusercontent.com/u/10282220?v=4" width="100px;" alt=""/><br /><sub><b>Jamie Halvorson</b></sub></a><br /><a href="https://github.com/ultm8soulja/ci-pilot/commits?author=jhalvorson" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/ultm8soulja"><img src="https://avatars1.githubusercontent.com/u/4200010?v=4" width="100px;" alt=""/><br /><sub><b>Colin Agbabiaka</b></sub></a><br /><a href="https://github.com/ultm8soulja/ci-pilot/commits?author=ultm8soulja" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/ultm8soulja"><img src="https://avatars1.githubusercontent.com/u/4200010?v=4" width="100px;" alt=""/><br /><sub><b>Colin Agbabiaka</b></sub></a><br /><a href="#ideas-ultm8soulja" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-ultm8soulja" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/ultm8soulja/ci-pilot/commits?author=ultm8soulja" title="Code">💻</a></td>
+    <td align="center"><a href="https://halvorson.co.uk"><img src="https://avatars1.githubusercontent.com/u/10282220?v=4" width="100px;" alt=""/><br /><sub><b>Jamie Halvorson</b></sub></a><br /><a href="#ideas-jhalvorson" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/ultm8soulja/ci-pilot/commits?author=jhalvorson" title="Code">💻</a></td>
   </tr>
 </table>
 
