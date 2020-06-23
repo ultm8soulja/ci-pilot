@@ -1,6 +1,7 @@
 import fs, { readdirSync, statSync } from 'fs';
 import { join } from 'path';
 
+import conventionalCommitsDetector from 'conventional-commits-detector';
 import { DepGraph } from 'dependency-graph';
 import { echo, exit, ShellString } from 'shelljs';
 import { JSONSchemaForNPMPackageJsonFiles } from '@schemastore/package';
@@ -27,6 +28,7 @@ import {
   isRemoteBranchExist,
   deleteLocalBranch,
   deleteRemoteRef,
+  getCommitMessagesFromRefToHead,
 } from '../modules';
 
 import { printInfoText, printErrorText, printSuccessText, printWarningText } from './console';
@@ -453,4 +455,20 @@ export const removeBranch = async (branch: string, where: 'LOCAL' | 'REMOTE' | '
   if (where === 'REMOTE' || where === 'BOTH') {
     await deleteRemoteRef(branch);
   }
+};
+
+export const detectConventionalCommits = async (baseRef = development) => {
+  const messages = await getCommitMessagesFromRefToHead(baseRef);
+
+  if (!messages) {
+    throw new Error("Can't find commit messages to analyse");
+  }
+
+  const outcome = conventionalCommitsDetector(messages);
+
+  if (outcome === 'unknown') {
+    return;
+  }
+
+  return outcome;
 };

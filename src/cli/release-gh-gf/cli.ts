@@ -1,6 +1,13 @@
 import includes from 'lodash/includes';
 
-import { printInfoText, printErrorText, startup, isMonorepo, checkIsGitFlowRepository } from '../../util';
+import {
+  printInfoText,
+  printErrorText,
+  startup,
+  isMonorepo,
+  checkIsGitFlowRepository,
+  detectConventionalCommits,
+} from '../../util';
 import { isGitRepository, isWorkingDirectoryClean } from '../../modules';
 import config from '../../config';
 
@@ -9,7 +16,7 @@ import { finishRelease } from './finish';
 import { cutRelease } from './cut';
 import { scrapRelease } from './scrap';
 
-const { DEV_MODE } = config;
+const { DEV_MODE, gitMethodology } = config;
 
 const steps = ['cut', 'stage', 'finish', 'scrap'] as const;
 export type Step = typeof steps[number];
@@ -27,6 +34,11 @@ export const releaseGitHubGitFlow = async (step: Step) => {
   }
 
   printInfoText('Running preliminary checks...');
+
+  if (!DEV_MODE && gitMethodology === 'GitHubFlow') {
+    printErrorText('This command is reserved for repositories following GitFlow');
+    process.exit(1);
+  }
 
   if (await isMonorepo()) {
     printErrorText("This command doesn't presently support monorepos");
@@ -47,6 +59,13 @@ export const releaseGitHubGitFlow = async (step: Step) => {
 
   try {
     checkIsGitFlowRepository();
+
+    if (!(await detectConventionalCommits())) {
+      printErrorText(
+        "The commit messages in this repository don't appear to follow Conventional Commits - can't proceed as this is mandatory"
+      );
+      process.exit(1);
+    }
 
     switch (step) {
       case 'cut':
