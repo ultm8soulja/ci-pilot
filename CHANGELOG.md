@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/ultm8soulja/ci-pilot/compare/v1.7.1...v1.8.0) (2020-06-25)
+
+
+### Features
+
+* Added CLI help flag ([ede379e](https://github.com/ultm8soulja/ci-pilot/commit/ede379ebbbbc5fd0063c17313075c079bdeb52fa))
+
 ## [1.7.1](https://github.com/ultm8soulja/ci-pilot/compare/v1.7.0...v1.7.1) (2020-06-23)
 
 
