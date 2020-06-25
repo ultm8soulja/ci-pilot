@@ -11,6 +11,9 @@ export const startup = (clearConsole = false): void => {
   console.log(chalk.green(textSync('CI Pilot', { horizontalLayout: 'full' })));
 };
 
+export const printStandardText = (text: string, lineBreak = true): void =>
+  console.log(chalk.white(text) + (lineBreak ? '\n' : ''));
+
 export const printInfoText = (text: string, lineBreak = true): void =>
   console.log(chalk.gray(text) + (lineBreak ? '\n' : ''));
 

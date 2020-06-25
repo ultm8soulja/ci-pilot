@@ -1,9 +1,17 @@
 import includes from 'lodash/includes';
 import { ParsedArgs } from 'minimist';
 
-import { printInfoText, printErrorText, startup, isMonorepo, checkIsGitFlowRepository } from '../../util';
+import {
+  printInfoText,
+  printErrorText,
+  startup,
+  isMonorepo,
+  checkIsGitFlowRepository,
+  printStandardText,
+} from '../../util';
 import { isGitRepository, isWorkingDirectoryClean } from '../../modules';
 import config from '../../config';
+import { RELEASE_GH_GF_HELP_MSG } from '../constants';
 
 import { stageReleaseCandidateHead } from './stage';
 import { finishRelease } from './finish';
@@ -16,6 +24,11 @@ const steps = ['cut', 'stage', 'finish', 'scrap'] as const;
 export type Step = typeof steps[number];
 
 export const releaseGitHubGitFlow = async (step: Step, cliArgs: ParsedArgs) => {
+  if (cliArgs.help) {
+    printStandardText(RELEASE_GH_GF_HELP_MSG, false);
+    process.exit(0);
+  }
+
   startup();
 
   printInfoText(`> ci-pilot release-gh-gf [step]`);
