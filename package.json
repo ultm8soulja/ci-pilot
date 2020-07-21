@@ -7,7 +7,7 @@
   "repository": "git@github.com:ultm8soulja/ci-pilot.git",
   "author": "Colin Agbabiaka <coliny2k@gmail.com>",
   "engines": {
-    "node": ">=10.20.0"
+    "node": ">=10.13.0"
   },
   "license": "MIT",
   "files": [
@@ -52,8 +52,8 @@
     "@commitlint/cli": ">=7.6.0",
     "@commitlint/config-conventional": "^8.3.4",
     "@schemastore/package": "^0.0.5",
-    "@semantic-release/changelog": "^5.0.1",
-    "@semantic-release/git": "^9.0.0",
+    "@semantic-release/changelog": "^4.0.0",
+    "@semantic-release/git": "^8.0.0",
     "@types/chalk": "^2.2.0",
     "@types/chance": "^1.0.10",
     "@types/clear": "^0.1.0",
@@ -83,7 +83,7 @@
     "jest": "^25.2.3",
     "prettier": "^1.19.1",
     "rimraf": "^3.0.2",
-    "semantic-release": "^17.0.4",
+    "semantic-release": "^16.0.4",
     "shx": "^0.3.2",
     "ts-jest": "^25.4.0",
     "ts-node": "^8.10.1",
