@@ -433,11 +433,6 @@ export const checkIsGitFlowRepository = () => {
       anError.message = `Development branch '${development}' doesn't exist remotely`;
       throw anError;
     }
-
-    if (!isAncestor(base, development)) {
-      anError.message = `'${base}' is supposed to be an ancestor of '${development}'`;
-      throw anError;
-    }
   } catch (error) {
     if (error.name === 'IsGitFlowError') {
       throw new Error(`This repository doesn't appear to follow GitFlow: ${error.message}`);
