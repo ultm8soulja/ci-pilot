@@ -1,3 +1,10 @@
+## [1.8.3](https://github.com/ultm8soulja/ci-pilot/compare/v1.8.2...v1.8.3) (2020-07-21)
+
+
+### Bug Fixes
+
+* Skip CI merge message only for development branch ([534c08f](https://github.com/ultm8soulja/ci-pilot/commit/534c08fe5d5c9bb392af18a82c46839c3d55cce1))
+
 ## [1.8.2](https://github.com/ultm8soulja/ci-pilot/compare/v1.8.1...v1.8.2) (2020-07-21)
 
 
