@@ -81,7 +81,7 @@ export const finishRelease = async (autoBump: boolean, mergeMsgSkipCi = false) =
     // Checkout master branch and pull latest version
     await checkoutBranch(branchNames.base);
 
-    const mergeCommitMsg = `chore(release): => Merged for ${tag} release${mergeMsgSkipCi ? ' [skip ci]' : ''}`;
+    let mergeCommitMsg = `chore(release): => Merged for ${tag} release`;
     await merge(releaseBaseBranchName, branchNames.base, mergeCommitMsg);
     await pushToOrigin(branchNames.base);
     printInfoText(`Merged '${releaseBaseBranchName}' into '${branchNames.base}' and pushed to remote`);
@@ -94,6 +94,7 @@ export const finishRelease = async (autoBump: boolean, mergeMsgSkipCi = false) =
     await checkoutBranch(branchNames.development);
 
     // Merge rc branch into develop and push to remote
+    mergeCommitMsg = `chore(release): => Merged for ${tag} release${mergeMsgSkipCi ? ' [skip ci]' : ''}`;
     await merge(releaseBaseBranchName, branchNames.development, mergeCommitMsg);
     await pushToOrigin(branchNames.development);
     printInfoText(`Merged '${releaseBaseBranchName}' into '${branchNames.development}' and pushed to remote`);
