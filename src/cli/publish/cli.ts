@@ -38,9 +38,9 @@ export const publish = async (stage: Stage, cliArgs: ParsedArgs) => {
     process.exit(1);
   }
 
-  const allowPackageOnly = !isUndefined(cliArgs.p) || !isUndefined(cliArgs['package-only']);
+  const denyPackageOnly = isUndefined(cliArgs.p) && isUndefined(cliArgs['package-only']);
 
-  if (isMonorepo() && CWD !== REPO_ROOT_PATH && allowPackageOnly) {
+  if (isMonorepo() && CWD !== REPO_ROOT_PATH && denyPackageOnly) {
     printErrorText(
       `You're running the command from the directory of a package in a mono-repo workspace - if you'd like to solely publish this package then run the command with the --package-only flag, exiting...`
     );
