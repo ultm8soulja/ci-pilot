@@ -1,8 +1,18 @@
 import includes from 'lodash/includes';
+import isUndefined from 'lodash/isUndefined';
+import { ParsedArgs } from 'minimist';
 
-import { printInfoText, printErrorText, isPackageManagerInstalled, startup, isMonorepo } from '../../util';
+import {
+  printInfoText,
+  printErrorText,
+  isPackageManagerInstalled,
+  startup,
+  isMonorepo,
+  printStandardText,
+} from '../../util';
 import { isGitRepository, isWorkingDirectoryClean } from '../../modules';
 import config from '../../config';
+import { PUBLISH_HELP_MSG } from '../constants';
 
 import { publishFeature } from './';
 
@@ -11,7 +21,12 @@ const { packageManager, DEV_MODE, CWD, REPO_ROOT_PATH } = config;
 const stages = ['feature' /* , 'alpha' */] as const;
 export type Stage = typeof stages[number];
 
-export const publish = async (stage: Stage) => {
+export const publish = async (stage: Stage, cliArgs: ParsedArgs) => {
+  if (cliArgs.help) {
+    printStandardText(PUBLISH_HELP_MSG, false);
+    process.exit(0);
+  }
+
   startup();
   printInfoText(`> ci-pilot publish [stage]`);
 
@@ -23,7 +38,9 @@ export const publish = async (stage: Stage) => {
     process.exit(1);
   }
 
-  if (isMonorepo() && CWD !== REPO_ROOT_PATH) {
+  const allowPackageOnly = !isUndefined(cliArgs.p) || !isUndefined(cliArgs['package-only']);
+
+  if (isMonorepo() && CWD !== REPO_ROOT_PATH && allowPackageOnly) {
     printErrorText(
       `You're running the command from the directory of a package in a mono-repo workspace - if you'd like to solely publish this package then run the command with the --package-only flag, exiting...`
     );

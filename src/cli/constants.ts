@@ -34,3 +34,16 @@ Options:
   -m  --merge-msg-skip-ci       This flag will suffix GitFlow merge commits with [skip ci], a common convention
                                 used to avoid additional jobs being triggered in your CI pipeline
 `;
+
+export const PUBLISH_HELP_MSG = `
+Usage: ci-pilot publish [OPTIONS] [COMMAND]
+
+Publish pre-release versions of code
+
+Sub-Commands:
+  feature
+
+Options:
+  -p  --package-only            This flag will instruct ci-pilot to allow publish commands for a package that
+                                resides in a mono-repo
+`;

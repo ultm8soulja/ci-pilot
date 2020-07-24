@@ -28,7 +28,7 @@ import { HELP_MSG } from './constants';
 
   switch (command) {
     case 'publish':
-      publish(subcommand as PublishStage);
+      publish(subcommand as PublishStage, cliArgs);
       break;
     case 'helper':
       helper(subcommand as Helper);
