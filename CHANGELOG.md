@@ -1,3 +1,10 @@
+## [1.8.5](https://github.com/ultm8soulja/ci-pilot/compare/v1.8.4...v1.8.5) (2020-07-24)
+
+
+### Bug Fixes
+
+* Refine --package-only logic for publish feature command ([6664cda](https://github.com/ultm8soulja/ci-pilot/commit/6664cda2bf839256df3a8f337b7ae7340284140a))
+
 ## [1.8.4](https://github.com/ultm8soulja/ci-pilot/compare/v1.8.3...v1.8.4) (2020-07-24)
 
 
