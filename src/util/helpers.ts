@@ -39,7 +39,6 @@ const {
   GITFLOW_RELEASE_BRANCH_REGEX,
   GH_GF_BASE_RELEASE_BRANCH_REGEX,
   LERNA_CONFIG_FILE_PATH,
-  PACKAGE_ROOT_PATH,
   REPO_ROOT_PATH,
   SEMVER_ALPHA_PRERELEASE_ID_PREFIX,
   SEMVER_FEATURE_PRERELEASE_ID_PREFIX,
@@ -218,7 +217,7 @@ export const getNextVersionInfo = async (
 
 export const isPackageMutated = async (packagePath: string, ancestorRef: string) => {
   const packageName = getPackageName(packagePath);
-  const relativePackagePathFromRepoRoot = PACKAGE_ROOT_PATH.replace(REPO_ROOT_PATH, '').replace(/^(\/)/, '');
+  const relativePackagePathFromRepoRoot = packagePath.replace(REPO_ROOT_PATH, '').replace(/^(\/)/, '');
   printInfo(`relativePackagePathFromRepoRoot: ${relativePackagePathFromRepoRoot}`, packageName);
   const pattern = new RegExp(relativePackagePathFromRepoRoot);
   const lines = await getDiff(ancestorRef);
