@@ -1,3 +1,10 @@
+## [1.8.6](https://github.com/ultm8soulja/ci-pilot/compare/v1.8.5...v1.8.6) (2020-07-25)
+
+
+### Bug Fixes
+
+* Bug in publishing features in monorepo ([871293e](https://github.com/ultm8soulja/ci-pilot/commit/871293e79df42e820f196bc7e5d08c237bfb6032))
+
 ## [1.8.5](https://github.com/ultm8soulja/ci-pilot/compare/v1.8.4...v1.8.5) (2020-07-24)
 
 
