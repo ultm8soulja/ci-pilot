@@ -4,7 +4,7 @@ import { readFileSync } from 'fs';
 // @ts-ignore
 import github from 'gh-got';
 
-import { getCurrentBranchName, getRepositoryName } from '../git';
+import { getRepositoryName } from '../git';
 import config from '../../config';
 import { printInfoText, printErrorText, printSuccessText } from '../../util';
 
@@ -20,8 +20,7 @@ const parseReleaseRequest = async () => {
   }
 };
 
-export const createPullRequest = async (rcBranch: string, newVersion: string) => {
-  const currentBranch = await getCurrentBranchName();
+export const createPullRequest = async (headBranch: string, baseBranch: string, newVersion: string) => {
   const remote = await getRepositoryName();
 
   if (!GITHUB_TOKEN) {
@@ -39,9 +38,9 @@ export const createPullRequest = async (rcBranch: string, newVersion: string) =>
       token: GITHUB_TOKEN,
       body: {
         title: `chore(release): => v${newVersion}`,
-        head: currentBranch,
-        base: rcBranch,
-        body: `${body} \n\n\n*created by ci-pilot*`,
+        head: headBranch,
+        base: baseBranch,
+        body: `${body} \n\n\n*Created by [ci-pilot](https://github.com/ultm8soulja/ci-pilot)*`,
         draft: true,
         labels: ['release'],
       },
