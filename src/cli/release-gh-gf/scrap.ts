@@ -21,9 +21,9 @@ export const scrapRelease = async () => {
   try {
     await checkoutReleaseBranch();
 
-    const { release, releaseBase } = retrieveReleaseRelicData();
+    const { release, interimBase } = retrieveReleaseRelicData();
 
-    await fetchBranch(releaseBase);
+    await fetchBranch(interimBase);
 
     // TODO: find and remove and tags on the release branch
 
@@ -31,7 +31,7 @@ export const scrapRelease = async () => {
 
     await removeBranch(release, 'BOTH');
 
-    await removeBranch(releaseBase, 'BOTH');
+    await removeBranch(interimBase, 'BOTH');
 
     printSuccessText('Operation complete');
   } catch (error) {

@@ -37,7 +37,7 @@ const {
   tagSeparator,
   FEATURE_BRANCH_REGEX,
   GITFLOW_RELEASE_BRANCH_REGEX,
-  GH_GF_BASE_RELEASE_BRANCH_REGEX,
+  GH_GF_INTERIM_BASE_BRANCH_REGEX,
   LERNA_CONFIG_FILE_PATH,
   REPO_ROOT_PATH,
   SEMVER_ALPHA_PRERELEASE_ID_PREFIX,
@@ -119,11 +119,11 @@ export const checkGitFlowReleaseBranch = (branch: string) => {
   return results[1];
 };
 
-export const checkGfGhBaseReleaseBranch = (branch: string) => {
-  const results = GH_GF_BASE_RELEASE_BRANCH_REGEX.exec(branch);
+export const checkGfGhInterimBaseBranch = (branch: string) => {
+  const results = GH_GF_INTERIM_BASE_BRANCH_REGEX.exec(branch);
 
   if (!results) {
-    throw new Error(`'${branch}' is not a GitHub-GitFlow base release candidate branch`);
+    throw new Error(`'${branch}' is not a GitHub-GitFlow interim base branch`);
   }
 
   return results[0];

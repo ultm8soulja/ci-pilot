@@ -1,6 +1,7 @@
 export interface ReleaseRelic {
   base: string;
-  releaseBase: string;
+  development: string;
+  interimBase: string;
   release: string;
   predictedVersion: string;
 }
