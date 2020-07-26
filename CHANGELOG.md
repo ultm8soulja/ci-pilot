@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/ultm8soulja/ci-pilot/compare/v1.8.6...v1.9.0) (2020-07-26)
+
+
+### Features
+
+* Card-42528128 Enhance GitHub GitFlow release process ([#37](https://github.com/ultm8soulja/ci-pilot/issues/37)) ([a561d65](https://github.com/ultm8soulja/ci-pilot/commit/a561d65ffb1dbf92f894ad2ffa9a683d1cf11286))
+
 ## [1.8.6](https://github.com/ultm8soulja/ci-pilot/compare/v1.8.5...v1.8.6) (2020-07-25)
 
 
