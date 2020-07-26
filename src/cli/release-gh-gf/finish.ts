@@ -126,7 +126,7 @@ export const finishRelease = async (autoBump: boolean, mergeMsgSkipCi = false) =
     // Clean-up after release
     /////////////////////////////////////////
 
-    await removeBranch(release, 'BOTH');
+    await removeBranch(release, 'LOCAL');
     await removeBranch(interimBaseBranchName, 'BOTH');
 
     printSuccessText('Operation complete');
