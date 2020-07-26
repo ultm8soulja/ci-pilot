@@ -25,6 +25,7 @@ const bump = promisify<Options, Callback.Recommendation>(conventionalRecommended
 
 const {
   REPO_ROOT_PATH,
+  INTERIM_BASE_BRANCH_PREFIX,
   branchNames,
   gitBranchSeparator,
   release: { preset },
@@ -38,22 +39,32 @@ export const cutRelease = async () => {
       );
     }
 
+    /////////////////////////////////////////
+    // Create interim base branch
+    /////////////////////////////////////////
+
     const currentBranchName = await getCurrentBranchName();
 
-    if (currentBranchName !== branchNames.development) {
-      await checkoutBranch(branchNames.development);
+    if (currentBranchName !== branchNames.base) {
+      await checkoutBranch(branchNames.base);
     }
 
-    const developmentBranchShasum = await getRefHash(currentBranchName);
-    const releaseBaseBranchName = `rc-${new Date().getTime()}-do-not-use`;
+    const interimBaseBranchName = `${INTERIM_BASE_BRANCH_PREFIX}${new Date().getTime()}`;
 
-    await createBranch(releaseBaseBranchName);
+    await createBranch(interimBaseBranchName);
 
-    await pushToOrigin(releaseBaseBranchName);
+    await pushToOrigin(interimBaseBranchName);
 
-    printInfoText(`Base release candidate branch '${releaseBaseBranchName}' successfully created and pushed to origin`);
+    printInfoText(`Interim base branch '${interimBaseBranchName}' successfully created and pushed to origin`);
 
+    /////////////////////////////////////////
     // Create release branch
+    /////////////////////////////////////////
+
+    const baseBranchShasum = await getRefHash(branchNames.base);
+    const developmentBranchShasum = await getRefHash(branchNames.development);
+
+    await checkoutBranch(branchNames.development);
 
     const { releaseType } = await bump({ preset });
 
@@ -68,9 +79,12 @@ export const cutRelease = async () => {
 
     await createBranch(releaseBranchName);
 
+    // Create release relic
+
     const relicData: ReleaseRelic = {
-      base: developmentBranchShasum,
-      releaseBase: releaseBaseBranchName,
+      base: baseBranchShasum,
+      development: developmentBranchShasum,
+      interimBase: interimBaseBranchName,
       release: releaseBranchName,
       predictedVersion: nextVersion,
     };
@@ -84,13 +98,15 @@ export const cutRelease = async () => {
 
     printInfoText(`Next release branch '${releaseBranchName}' successfully created and pushed to origin`);
 
-    await createPullRequest(releaseBaseBranchName, nextVersion);
+    await createPullRequest(releaseBranchName, interimBaseBranchName, nextVersion);
 
+    /////////////////////////////////////////
     // Clean-up local branches
+    /////////////////////////////////////////
 
     await checkoutBranch(branchNames.development);
     await deleteLocalBranch(releaseBranchName);
-    await deleteLocalBranch(releaseBaseBranchName);
+    await deleteLocalBranch(interimBaseBranchName);
 
     printSuccessText('Operation complete');
   } catch (error) {
