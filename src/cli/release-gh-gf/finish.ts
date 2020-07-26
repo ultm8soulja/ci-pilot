@@ -16,6 +16,8 @@ import {
   moveTag,
   getRefHash,
   getMatchingTagsAtHead,
+  createBranch,
+  cherryPickCommits,
 } from '../../modules';
 import config from '../../config';
 
@@ -36,6 +38,15 @@ export const finishRelease = async (autoBump: boolean, mergeMsgSkipCi = false) =
 
     // TODO: Check if the last commit on the base branch was from the GitFlow release branch???
 
+    const { base, development, release } = retrieveReleaseRelicData();
+    if ((await getRefHash(base)) === (await getRefHash(interimBaseBranchName))) {
+      throw new Error(`Expected '${interimBaseBranchName}' to differ from '${branchNames.base}'`);
+    }
+
+    /////////////////////////////////////////
+    // Versioning
+    /////////////////////////////////////////
+
     if (autoBump) {
       try {
         await standardVersion({ preset, releaseCommitMessageFormat: BUMP_COMMIT_MESSAGE, noVerify: true, tagPrefix });
@@ -48,12 +59,10 @@ export const finishRelease = async (autoBump: boolean, mergeMsgSkipCi = false) =
       );
     }
 
-    const { base } = retrieveReleaseRelicData();
-    if ((await getRefHash(base)) === (await getRefHash(interimBaseBranchName))) {
-      throw new Error(`Expected '${interimBaseBranchName}' to differ from '${branchNames.base}'`);
-    }
+    /////////////////////////////////////////
+    // Check tags
+    /////////////////////////////////////////
 
-    // Ensure we're still on interim base branch
     await checkoutBranch(interimBaseBranchName);
 
     // Check for a git tag on the head of the branch and ensure it matches the version in package.json
@@ -79,13 +88,26 @@ export const finishRelease = async (autoBump: boolean, mergeMsgSkipCi = false) =
 
     printInfoText(`Version tag found on head of '${interimBaseBranchName}': ${tag}`);
 
+    /////////////////////////////////////////
+    // Re-create release branch
+    /////////////////////////////////////////
+
+    await checkoutBranch(development, false);
+    await createBranch(release);
+    await cherryPickCommits(development, interimBaseBranchName);
+    await moveTag(tag, release);
+
+    /////////////////////////////////////////
+    // Finalise GitFlow release
+    /////////////////////////////////////////
+
     // Checkout master branch and pull latest version
     await checkoutBranch(branchNames.base);
 
     let mergeCommitMsg = `chore(release): => Merged for ${tag} release`;
-    await merge(interimBaseBranchName, branchNames.base, mergeCommitMsg);
+    await merge(release, branchNames.base, mergeCommitMsg);
     await pushToOrigin(branchNames.base);
-    printInfoText(`Merged '${interimBaseBranchName}' into '${branchNames.base}' and pushed to remote`);
+    printInfoText(`Merged '${release}' into '${branchNames.base}' and pushed to remote`);
 
     await moveTag(tag, branchNames.base);
     await pushToOrigin(tag, true);
@@ -96,11 +118,15 @@ export const finishRelease = async (autoBump: boolean, mergeMsgSkipCi = false) =
 
     // Merge rc branch into develop and push to remote
     mergeCommitMsg = `chore(release): => Merged for ${tag} release${mergeMsgSkipCi ? ' [skip ci]' : ''}`;
-    await merge(interimBaseBranchName, branchNames.development, mergeCommitMsg);
+    await merge(release, branchNames.development, mergeCommitMsg);
     await pushToOrigin(branchNames.development);
-    printInfoText(`Merged '${interimBaseBranchName}' into '${branchNames.development}' and pushed to remote`);
+    printInfoText(`Merged '${release}' into '${branchNames.development}' and pushed to remote`);
 
-    // Delete rc base from remote and local
+    /////////////////////////////////////////
+    // Clean-up after release
+    /////////////////////////////////////////
+
+    await removeBranch(release, 'BOTH');
     await removeBranch(interimBaseBranchName, 'BOTH');
 
     printSuccessText('Operation complete');

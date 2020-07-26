@@ -72,11 +72,13 @@ export const fetchMatchingTags = async (pattern: string) => {
   await git.fetch('origin', undefined, refSpecs);
 };
 
-export const checkoutBranch = async (branch: string) => {
+export const checkoutBranch = async (branch: string, pull = true) => {
   const git = simpleGit();
   try {
     await git.checkout(branch);
-    await git.pull();
+    if (pull) {
+      await git.pull();
+    }
   } catch (error) {
     if ((error.message as string).includes('did not match any file(s) known to git')) {
       throw new Error(`'${branch}' branch does not exist`);
@@ -253,4 +255,9 @@ export const getCommitMessagesFromRefToHead = async (ref: string) => {
     }
     throw error;
   }
+};
+
+export const cherryPickCommits = async (fromRef: string, toRef: string) => {
+  const git = simpleGit();
+  await git.raw(['cherry-pick', `${fromRef}^..${toRef}`]);
 };
