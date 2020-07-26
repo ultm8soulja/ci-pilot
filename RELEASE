@@ -1,0 +1,7 @@
+{
+  "base": "0ce60aa461e3b1c3d594a020fffec229f72554e6",
+  "development": "7a6ef25766a6c2feb029544cff054cdd380688dc",
+  "interimBase": "base-interim-1595757090451",
+  "release": "release/1.9.0",
+  "predictedVersion": "1.9.0"
+}
