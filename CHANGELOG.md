@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/ultm8soulja/ci-pilot/compare/v1.9.0...v1.9.1) (2020-12-16)
+
+
+### Bug Fixes
+
+* Pin simple-git version to 2.4.0 (breaking change on minors, tuttut) ([2702cf4](https://github.com/ultm8soulja/ci-pilot/commit/2702cf4a752adc7bc65f65978eb79e9ecd648650))
+
 # [1.9.0](https://github.com/ultm8soulja/ci-pilot/compare/v1.8.6...v1.9.0) (2020-07-26)
 
 
